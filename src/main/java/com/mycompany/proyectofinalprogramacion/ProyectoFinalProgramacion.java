@@ -24,7 +24,9 @@ public class ProyectoFinalProgramacion {
         user.setPoints(10_000);
         
         
-        // Creacion de usuario
+        // Creacion de usuario 
         userDao.create(user);
+        user.setName("Test User2");
+        userDao.update(user);
     }
 }
