@@ -14,7 +14,7 @@ public class ProyectoFinalProgramacion {
         // pruebas
         User user = new User();
         UserDAO userDao = new UserDAO();
-        
+
         user.setLogin("test");
         user.setName("Test User");
         user.setPassword("1234");
@@ -22,9 +22,8 @@ public class ProyectoFinalProgramacion {
         user.setState("activo");
         user.setEmail("email@email.com");
         user.setPoints(10_000);
-        
-        
-        // Creacion de usuario 
+
+        // Creacion de usuario
         userDao.create(user);
         user.setName("Test User2");
         userDao.update(user);
