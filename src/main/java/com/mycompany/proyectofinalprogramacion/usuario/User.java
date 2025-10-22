@@ -10,8 +10,11 @@ public class User {
     private String password;
     private Genero gender;
     private String email;
-    private String state; // Posibles estados: "baneado" | "activo"
+    private Estado state; // Posibles estados: "baneado" | "activo"
+    private String role;
     private int points;
+
+    
     
     public User(){}
     
@@ -25,7 +28,7 @@ public class User {
         this.password = password;
         this.gender = gender;
         this.email = email;
-        this.state = "activo";
+        this.state = Estado.activo;
         this.points = 0;
     }
     
@@ -35,7 +38,7 @@ public class User {
         this.password = password;
         this.gender = gender;
         this.email = email;
-        this.state = state;
+        this.state = Estado.activo;
         this.points = points;
     }
 
@@ -66,11 +69,15 @@ public class User {
     public Genero getGender() {
         return gender;
     }
+    
+    public String getRole(){
+        return role;
+    }
 
     public void setGender(Genero gender) {
         this.gender = gender;
     }
-
+    
     public String getEmail() {
         return email;
     }
@@ -79,11 +86,11 @@ public class User {
         this.email = email;
     }
 
-    public String getState() {
+    public Estado getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(Estado state) {
         this.state = state;
     }
 
@@ -93,5 +100,9 @@ public class User {
 
     public void setPoints(int points) {
         this.points = points;
+    }
+    
+    public void setRole(String role){
+       this.role = role;
     }
 }
