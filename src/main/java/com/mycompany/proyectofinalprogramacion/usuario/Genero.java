@@ -5,9 +5,9 @@ package com.mycompany.proyectofinalprogramacion.usuario;
  * @author Nicolas Ribeiro
  */
 public enum Genero {
-    FEMENINO("femenino"),
-    MASCULINO("masculino"),
-    NO_ESPECIFICADO("ns/nc");
+    femenino("femenino"),
+    masculino("masculino"),
+    no_especificado("ns/nc");
     
     private final String valorEnBD;
     

@@ -12,7 +12,7 @@ import java.sql.SQLException;
  */
 public class UserDAO {
     public void create(User user){
-        String query = "INSERT INTO usuarios(login, nombre, contraseña, genero, correo, estado, puntos) VALUES (?,?,?,?,?,?,?)";
+        String query = "INSERT INTO usuarios(login, nombre, contraseña, genero, correo, estado, puntos, rol) VALUES (?,?,?,?,?,?,?,?)";
         try{
             Connection conn = DBConnector.getConnection();
             PreparedStatement statement = conn.prepareStatement(query);
@@ -22,8 +22,9 @@ public class UserDAO {
             statement.setString(3, user.getPassword());
             statement.setString(4, user.getGender().obtenerValorParaBD());
             statement.setString(5, user.getEmail());
-            statement.setString(6, user.getState());
+            statement.setString(6, user.getState().obtenerValorParaBD());
             statement.setInt(7, user.getPoints());
+            statement.setString(8, user.getRole());
             statement.executeUpdate();
             System.out.println("Usuario '"+user.getLogin()+"' creado exitosamente");
             
@@ -32,8 +33,8 @@ public class UserDAO {
         }
     }
     
-    public User get(String login){
-        String query = "SELECT * FROM usuario WHERE login= ?";
+    public User get(String login) {
+        String query = "SELECT * FROM usuarios WHERE login= ?";
         User user = null;
         try{
             Connection conn = DBConnector.getConnection();
@@ -48,8 +49,9 @@ public class UserDAO {
                 user.setPassword(result.getString("contraseña"));
                 user.setGender(Genero.desdeBD(result.getString("genero")));
                 user.setEmail(result.getString("correo"));
-                user.setState(result.getString("estado"));
+                user.setState(Estado.desdeBD(result.getString("estado")));
                 user.setPoints(result.getInt("puntos"));
+                user.setRole(result.getString("rol"));
             }
         }catch(SQLException error){
             System.out.println("Ocurrio un error al obtener el usuario: " + error.getMessage());
@@ -58,7 +60,7 @@ public class UserDAO {
     }
     
     public void update(User user){
-        String query = "UPDATE usuario SET nombre = ?, contraseña=?, genero=?,correo=?,estado=?,puntos=? WHERE login = ?";
+        String query = "UPDATE usuarios SET nombre = ?, contraseña=?, genero=?,correo=?,estado=?,puntos=?,rol=? WHERE login = ?";
         try{
             Connection conn = DBConnector.getConnection();
             PreparedStatement statement = conn.prepareStatement(query);
@@ -67,9 +69,10 @@ public class UserDAO {
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getGender().obtenerValorParaBD());
             statement.setString(4, user.getEmail());
-            statement.setString(5, user.getState());
+            statement.setString(5, user.getState().obtenerValorParaBD());
             statement.setInt(6, user.getPoints());
-            statement.setString(7, user.getLogin());
+            statement.setString(7, user.getRole());
+            statement.setString(8, user.getLogin());
             
             int affectedRows = statement.executeUpdate();
             
@@ -88,7 +91,7 @@ public class UserDAO {
     }
 
     public void delete (String login){
-        String query = "DELETE FROM usuario WHERE login = ?";
+        String query = "DELETE FROM usuarios WHERE login = ?";
         
         try{
             Connection conn = DBConnector.getConnection();
