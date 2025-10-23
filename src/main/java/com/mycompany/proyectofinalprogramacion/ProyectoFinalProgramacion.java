@@ -47,10 +47,9 @@ public class ProyectoFinalProgramacion {
         //userDao.create(user2);
         
         // Traer un dato de la base de datos
-        User user3 = userDao.get("test");
-        System.out.println("Nombre: " + user3.getName());
-        
-        if(user3.getState().equals("baneado")){
+        //User user3 = userDao.get("test");
+        //System.out.println("Nombre: " + user3.getName());
+        /*  if(user3.getState().equals("baneado")){
             System.out.println("Usted cago fuego");
             
         }else{
@@ -58,5 +57,7 @@ public class ProyectoFinalProgramacion {
         }
 
         System.out.println("Estado: " + Estado.activo);
+        */
+       
     }
 }
