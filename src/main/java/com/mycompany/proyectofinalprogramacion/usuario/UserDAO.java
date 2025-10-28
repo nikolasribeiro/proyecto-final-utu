@@ -12,7 +12,7 @@ import java.sql.SQLException;
  */
 public class UserDAO {
     public void create(User user){
-        String query = "INSERT INTO usuarios(login, nombre, contraseña, genero, correo, estado, puntos, rol) VALUES (?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO usuario(login, nombre, contraseña, genero, correo, estado, puntos, rol) VALUES (?,?,?,?,?,?,?,?)";
         try{
             Connection conn = DBConnector.getConnection();
             PreparedStatement statement = conn.prepareStatement(query);
@@ -34,7 +34,7 @@ public class UserDAO {
     }
     
     public User get(String login) {
-        String query = "SELECT * FROM usuarios WHERE login= ?";
+        String query = "SELECT * FROM usuario WHERE login= ?";
         User user = null;
         try{
             Connection conn = DBConnector.getConnection();
@@ -60,7 +60,7 @@ public class UserDAO {
     }
     
     public void update(User user){
-        String query = "UPDATE usuarios SET nombre = ?, contraseña=?, genero=?,correo=?,estado=?,puntos=?,rol=? WHERE login = ?";
+        String query = "UPDATE usuario SET nombre = ?, contraseña=?, genero=?,correo=?,estado=?,puntos=?,rol=? WHERE login = ?";
         try{
             Connection conn = DBConnector.getConnection();
             PreparedStatement statement = conn.prepareStatement(query);
@@ -91,7 +91,7 @@ public class UserDAO {
     }
 
     public void delete (String login){
-        String query = "DELETE FROM usuarios WHERE login = ?";
+        String query = "DELETE FROM usuario WHERE login = ?";
         
         try{
             Connection conn = DBConnector.getConnection();
