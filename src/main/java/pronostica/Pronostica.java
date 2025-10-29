@@ -6,20 +6,20 @@ package pronostica;
 
 /**
  *
- * @author 44027458
+ * @author Juan de la Vega
  */
 public class Pronostica {
-     private String login;
+    private String login;
     private int idEncuentro;
     private int resultadoLocal;
     private int resultadoVisita;
 
-public Pronostica (String login, int idEncuentro, int resultadoLocal, int resultadoVisita){
-        this.login = login;
-        this.idEncuentro = idEncuentro;
-        this.resultadoLocal = resultadoLocal;
-        this.resultadoVisita = resultadoVisita;
-}
+    public Pronostica (String login, int idEncuentro, int resultadoLocal, int resultadoVisita){
+            this.login = login;
+            this.idEncuentro = idEncuentro;
+            this.resultadoLocal = resultadoLocal;
+            this.resultadoVisita = resultadoVisita;
+    }
 
     public String getLogin() {
         return login;

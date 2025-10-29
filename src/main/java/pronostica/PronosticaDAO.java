@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 /**
  *
- * @author 44027458
+ * @author Juan de la Vega
  */
 public class PronosticaDAO {
  
