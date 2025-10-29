@@ -15,6 +15,8 @@ public class Encuentro {
     private String horaInicio;
     private String horaFin;
     private String estado; // Posibles estados: habilitado, jugando y finalizado
+    private String nombreLocal;
+    private String nombreVisita;
     private Integer resultadoLocal;
     private Integer resultadoVisita;
     private int idLocal;
@@ -70,6 +72,14 @@ public class Encuentro {
     public String getHoraFin() {
         return horaFin;
     }
+    
+    public String getNombreLocal(){
+        return this.nombreLocal;
+    }
+    
+    public String getNombreVisita(){
+        return this.nombreVisita;
+    }
 
     public void setHoraFin(String horaFin) {
         this.horaFin = horaFin;
@@ -114,6 +124,21 @@ public class Encuentro {
     public void setIdVisita(int idVisita) {
         this.idVisita = idVisita;
     }
+    
+    public void setNombreLocal(String nombre){
+        this.nombreLocal = nombre;
+    }
+    
+    public void setNombreVisita(String nombre){
+        this.nombreVisita = nombre;
+    }
+
+    @Override
+    public String toString() {
+        return "Esto es una instancia de la clase de tipo Encuentro... local: " + this.getNombreLocal() + " - Visita: " + this.getNombreVisita();
+    }
+    
+    
     
     
 }

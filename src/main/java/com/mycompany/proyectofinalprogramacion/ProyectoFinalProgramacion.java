@@ -1,9 +1,12 @@
 package com.mycompany.proyectofinalprogramacion;
 
-import com.mycompany.proyectofinalprogramacion.usuario.Estado;
-import com.mycompany.proyectofinalprogramacion.usuario.Genero;
-import com.mycompany.proyectofinalprogramacion.usuario.User;
-import com.mycompany.proyectofinalprogramacion.usuario.UserDAO;
+import com.mycompany.proyectofinalprogramacion.encuentro.Encuentro;
+import com.mycompany.proyectofinalprogramacion.encuentro.EncuentroDAO;
+import java.util.List;
+import usuarios.Estado;
+import usuarios.Genero;
+import usuarios.User;
+import usuarios.UserDAO;
 
 /**
  *
@@ -15,6 +18,12 @@ public class ProyectoFinalProgramacion {
         //Este objeto vive en memoria
         User user1 = new User(); 
         User user2 = new User();
+        
+        EncuentroDAO encuentroDao = new EncuentroDAO();
+        
+        List<Encuentro> encuentroList = encuentroDao.listar();
+        
+        System.out.println("Elemento en el indice 0: " + encuentroList.get(0));
         
         // Este objeto es el intermediario entre 
         //el objeto en memoria y la base de datos.
@@ -30,9 +39,9 @@ public class ProyectoFinalProgramacion {
 
         // Creacion de usuario
         userDao.create(user1);
-        System.out.println("Nombre inicial: "+user1.getName());
+       // System.out.println("Nombre inicial: "+user1.getName());
         user1.setName("Test User2");
-        System.out.println("Nombre actualizado: "+user1.getName());
+        //System.out.println("Nombre actualizado: "+user1.getName());
         userDao.update(user1);
         
         // Creacion de usuario 2
