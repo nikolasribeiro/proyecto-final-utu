@@ -1,9 +1,9 @@
 package com.mycompany.proyectofinalprogramacion;
 
-import com.mycompany.proyectofinalprogramacion.usuario.Estado;
-import com.mycompany.proyectofinalprogramacion.usuario.Genero;
-import com.mycompany.proyectofinalprogramacion.usuario.User;
-import com.mycompany.proyectofinalprogramacion.usuario.UserDAO;
+import usuarios.Estado;
+import usuarios.Genero;
+import usuarios.User;
+import usuarios.UserDAO;
 
 /**
  *

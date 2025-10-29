@@ -1,4 +1,4 @@
-package com.mycompany.proyectofinalprogramacion.usuario;
+package usuarios;
 
 /**
  *
