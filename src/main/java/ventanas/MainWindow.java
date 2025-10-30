@@ -9,6 +9,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import pronostica.Pronostica;
 import pronostica.PronosticaDAO;
+import usuarios.User;
 
 /**
  *
@@ -18,6 +19,7 @@ public class MainWindow extends javax.swing.JFrame {
     
     private DefaultListModel<String> eventListModel = new DefaultListModel<>();
     private EncuentroDAO encuentroDao = new EncuentroDAO();
+    private User userLoggedIn;
     
     /**
      * Creates new form MainWindow
@@ -26,6 +28,19 @@ public class MainWindow extends javax.swing.JFrame {
         initComponents();
         _initialState();
         
+        eventList.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent evt) {
+                _eventListValueChanged(evt);
+            }
+        });
+    }
+    
+    public MainWindow(User userLoggedIn) {
+        initComponents();
+        _initialState();
+        
+        this.userLoggedIn = userLoggedIn;
+ 
         eventList.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent evt) {
                 _eventListValueChanged(evt);
@@ -210,12 +225,12 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_localFieldGoalsActionPerformed
 
     private void addBetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBetActionPerformed
-        String mockLogin = "test";
+        String userLogin = userLoggedIn.getLogin();
         String localInputValue = localFieldGoals.getText();
         String visitInputValue = visitFieldGoals.getText();
         String eventId = eventIdFromLabel.getText();
         
-        Pronostica pronostico = new Pronostica(mockLogin, Integer.parseInt(eventId), Integer.parseInt(localInputValue), Integer.parseInt(visitInputValue));
+        Pronostica pronostico = new Pronostica(userLogin, Integer.parseInt(eventId), Integer.parseInt(localInputValue), Integer.parseInt(visitInputValue));
         PronosticaDAO pronosticaDao = new PronosticaDAO();
         pronosticaDao.create(pronostico);
         

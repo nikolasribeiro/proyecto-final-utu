@@ -15,6 +15,8 @@ import usuarios.UserDAO;
 public class ProyectoFinalProgramacion {
 
     public static void main(String[] args) {
+        
+        /*
         //Este objeto vive en memoria
         User user1 = new User(); 
         User user2 = new User();
@@ -74,5 +76,9 @@ public class ProyectoFinalProgramacion {
         System.out.println("Estado: " + Estado.activo);
         */
        
+        // Genero gender =  Genero.desdeBD("ns/nc");
+        
+        // System.out.println(gender);
+        
     }
 }
