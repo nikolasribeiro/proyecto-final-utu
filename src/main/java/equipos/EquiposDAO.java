@@ -9,7 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-
+//* CREATE: Inserta un nuevo equipo en la base de datos.
 public class EquiposDAO {
 
     /**
