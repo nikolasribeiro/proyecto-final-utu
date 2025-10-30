@@ -7,14 +7,39 @@ package pronostica;
 import com.mycompany.proyectofinalprogramacion.DBConnector;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author Juan de la Vega
  */
 public class PronosticaDAO {
- 
+
+    public List<Pronostica> listar() {
+        List<Pronostica> pronosticos = new ArrayList<>();
+        String sql = "SELECT login, idEncuentro, resultadoLocal, resultadoVisita FROM pronostica"; // Seleccionamos todas las columnas
+
+        // Usamos try-with-resources para asegurar el cierre automático
+        try (Connection conn = DBConnector.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Pronostica p = new Pronostica();
+                p.setLogin(rs.getString("login"));
+                p.setIdEncuentro(rs.getInt("idEncuentro"));
+                p.setResultadoLocal(rs.getInt("resultadoLocal"));
+                p.setResultadoVisita(rs.getInt("resultadoVisita"));
+                pronosticos.add(p);
+            }
+        } catch (SQLException ex) {
+            System.out.println(" Error al listar los pronósticos: " + ex.getMessage());
+        }
+        return pronosticos;
+    }
     public void create(Pronostica pronostico){
         String query = "INSERT INTO pronostica(login, idEncuentro, resultadoLocal, resultadoVisita) VALUES (?,?,?,?)";
         try{
@@ -33,4 +58,6 @@ public class PronosticaDAO {
             System.out.println("Ocurrio un error al cargar el pronostico: " + error.getMessage());
         }
     }
+
+   
 }
