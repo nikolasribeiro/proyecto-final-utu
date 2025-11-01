@@ -19,7 +19,7 @@ import java.util.List;
  * @author Leo
  */
 public class EncuentroDAO {
-    
+    //Listar encuentros
     public List<Encuentro> listar() {
         List<Encuentro> encuentros = new ArrayList<>();
         String sql = "SELECT e.idEncuentro, e.fecha, e.horaInicio, el.nombre AS NombreLocal, ev.nombre AS NombreVisita, e.resultadoLocal, e.resultadoVisita, e.estado, e.horaFin FROM encuentro AS e JOIN equipo AS el ON e.idLocal = el.idEquipo JOIN equipo AS ev ON e.idVisita = ev.idEquipo;";
@@ -49,7 +49,7 @@ public class EncuentroDAO {
         }
         return encuentros;    
     }
-    
+    // Agregar un encuentro
     public void agregarEncuentro (Date fecha, Time horaInicio, Time horaFin, String estado,
             int idLocal, int idVisita)
     {
@@ -69,6 +69,30 @@ public class EncuentroDAO {
             System.out.println("Encuentro agregado correctamente bro!");
         } catch (SQLException e){
             System.out.println("Algo hiciste mal pibe: " + e.getMessage());
+        }
+    }
+    // Eliminar un encuentro
+    public void borrarEncuentro (int idEncuentro){
+        String sql = "DELETE FROM encuentro WHERE idEncuentro =?";
+        
+        try (Connection conn = DBConnector.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            
+            ps.setInt(1, idEncuentro);
+            int filas = ps.executeUpdate();
+            
+            if (filas > 0){
+                System.out.println("Encuentro eliminado correctamente");
+            }else {
+                System.out.println("No se encontro el encuentro con ID: " + idEncuentro);
+            }
+            
+        }catch (SQLException e){
+            if (e.getMessage().contains("foreign key")){
+                System.out.println("No se puede eliminar el encuentro porque tiene pronosticos asociados");
+            }else{
+                System.out.println("Error al eliminar encuentro: " + e.getMessage());
+            }
         }
     }
     
