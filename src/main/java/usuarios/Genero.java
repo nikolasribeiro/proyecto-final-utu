@@ -1,4 +1,4 @@
-package com.mycompany.proyectofinalprogramacion.usuario;
+package usuarios;
 
 /**
  *
@@ -20,7 +20,10 @@ public enum Genero {
     }
     
     public static Genero desdeBD(String genero){
+        if(genero.equals("ns/nc")){
+            return Genero.no_especificado;
+        }
         return Genero.valueOf(genero);
     }
-    
+
 }

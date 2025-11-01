@@ -1,4 +1,4 @@
-package com.mycompany.proyectofinalprogramacion.usuario;
+package usuarios;
 
 import com.mycompany.proyectofinalprogramacion.DBConnector;
 import java.sql.Connection;

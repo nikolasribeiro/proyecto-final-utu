@@ -4,7 +4,7 @@ package equipos;
 import java.util.List;
 
 /**
- * Clase principal para probar las operaciones CRUD del EquipoDAO.
+ * Clase principal para probar las operaciones CRUD del EquipoDAO. Pereyra
  */
 public class TestEquipos {
 

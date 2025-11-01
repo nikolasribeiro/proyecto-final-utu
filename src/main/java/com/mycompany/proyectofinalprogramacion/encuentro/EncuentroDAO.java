@@ -22,7 +22,7 @@ public class EncuentroDAO {
     //Listar encuentros
     public List<Encuentro> listar() {
         List<Encuentro> encuentros = new ArrayList<>();
-        String sql = "SELECT * FROM encuentro";
+        String sql = "SELECT e.idEncuentro, e.fecha, e.horaInicio, el.nombre AS NombreLocal, ev.nombre AS NombreVisita, e.resultadoLocal, e.resultadoVisita, e.estado, e.horaFin FROM encuentro AS e JOIN equipo AS el ON e.idLocal = el.idEquipo JOIN equipo AS ev ON e.idVisita = ev.idEquipo;";
         
         try 
             (Connection conn = DBConnector.getConnection();
@@ -36,12 +36,13 @@ public class EncuentroDAO {
                 e.setHoraInicio(rs.getString("horaInicio"));
                 e.setHoraFin(rs.getString("horaFin"));
                 e.setEstado(rs.getString("estado"));
+                e.setNombreLocal(rs.getString("NombreLocal"));
+                e.setNombreVisita(rs.getString("NombreVisita"));
                 e.setResultadoLocal((Integer)rs.getObject("resultadoLocal"));
                 e.setResultadoVisita((Integer)rs.getObject("resultadoVisita"));
-                e.setIdLocal(rs.getInt("idLocal"));
-                e.setIdVisita(rs.getInt("idVisita"));
-                
-                encuentros.add(e);
+                if(!e.getEstado().equals("finalizado")){
+                    encuentros.add(e);
+                }
             }           
         } catch (SQLException ex) {
             System.out.println("Error al listar el encuentro: " + ex.getMessage());
@@ -50,7 +51,8 @@ public class EncuentroDAO {
     }
     // Agregar un encuentro
     public void agregarEncuentro (Date fecha, Time horaInicio, Time horaFin, String estado,
-            int idLocal, int idVisita){
+            int idLocal, int idVisita)
+    {
         String sql = "INSERT INTO encuentro (fecha, horaInicio, horaFin, estado,idLocal, idVisita) VALUES (?,?,?,?,?,?)";
         
         try (Connection conn = DBConnector.getConnection();
@@ -93,6 +95,7 @@ public class EncuentroDAO {
             }
         }
     }
+    
     
 }
            
