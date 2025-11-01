@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package pronostica;
 
 /**
@@ -15,11 +11,13 @@ public class Pronostica {
     private int resultadoVisita;
 
     public Pronostica (String login, int idEncuentro, int resultadoLocal, int resultadoVisita){
-            this.login = login;
-            this.idEncuentro = idEncuentro;
-            this.resultadoLocal = resultadoLocal;
-            this.resultadoVisita = resultadoVisita;
+        this.login = login;
+        this.idEncuentro = idEncuentro;
+        this.resultadoLocal = resultadoLocal;
+        this.resultadoVisita = resultadoVisita;
     }
+    
+    public Pronostica() {}
 
     public String getLogin() {
         return login;
