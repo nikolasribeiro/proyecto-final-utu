@@ -58,6 +58,6 @@ public class PronosticaDAO {
             System.out.println("Ocurrio un error al cargar el pronostico: " + error.getMessage());
         }
     }
+    
 
-   
 }
