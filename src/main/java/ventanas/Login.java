@@ -6,6 +6,7 @@ package ventanas;
 
 import javax.swing.JOptionPane;
 import usuarios.Estado;
+import usuarios.Rol;
 import usuarios.UserDAO;
 import usuarios.User;
 /**
@@ -140,16 +141,25 @@ public class Login extends javax.swing.JFrame {
                 Ahora cotejamos que no este baneado
             */
             Estado currentStatus = user.getState();
-            if(currentStatus.equals(Estado.baneado)){
-                JOptionPane.showMessageDialog(null, "Error", "Estas baneado :(", JOptionPane.ERROR_MESSAGE);
+            if(currentStatus.equals(Estado.banneado)){
+                JOptionPane.showMessageDialog(null,"Estas baneado :(",  "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             
             // Si llego aca, significa que el usuario no esta baneado
-            // Entonces abrimos la ventana principal
+            // Entonces abrimos la ventana principal SI EL ROL DEL USUARIO ES "user"
             
-            MainWindow mainWindow = new MainWindow(user);
-            mainWindow.setVisible(true);
+            if(user.getRole() == Rol.user){
+                MainWindow mainWindow = new MainWindow(user);
+                mainWindow.setVisible(true);
+            }
+            
+            if(user.getRole() == Rol.admin){
+                PanelAdm mainAdmin = new PanelAdm(user);
+                mainAdmin.setVisible(true);
+            }
+            
+            
             
             this.dispose();
         }

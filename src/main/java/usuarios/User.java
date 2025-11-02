@@ -11,7 +11,7 @@ public class User {
     private Genero gender;
     private String email;
     private Estado state; // Posibles estados: "baneado" | "activo"
-    private String role;
+    private Rol role;
     private int points;
 
     
@@ -70,7 +70,7 @@ public class User {
         return gender;
     }
     
-    public String getRole(){
+    public Rol getRole(){
         return role;
     }
 
@@ -102,7 +102,7 @@ public class User {
         this.points = points;
     }
     
-    public void setRole(String role){
+    public void setRole(Rol role){
        this.role = role;
     }
 }
