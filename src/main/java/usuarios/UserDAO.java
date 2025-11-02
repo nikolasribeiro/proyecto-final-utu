@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -57,6 +59,32 @@ public class UserDAO {
             System.out.println("Ocurrio un error al obtener el usuario: " + error.getMessage());
         }
         return user;
+    }
+    
+    public List<User> getAll() {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT login,nombre,genero,correo,estado,rol,puntos FROM usuario";
+
+        // Usamos try-with-resources para asegurar el cierre automático
+        try (Connection conn = DBConnector.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                User user = new User();
+                user.setLogin(rs.getString("login"));
+                user.setName(rs.getString("nombre"));
+                user.setGender( Genero.desdeBD( rs.getString("genero") ) );
+                user.setEmail(rs.getString("correo"));
+                user.setState(Estado.desdeBD(rs.getString("estado")));
+                user.setRole(rs.getString("rol"));
+                user.setPoints(rs.getInt("puntos"));
+                users.add(user);
+            }
+        } catch (SQLException ex) {
+            System.out.println(" Error al listar los pronósticos: " + ex.getMessage());
+        }
+        return users;
     }
     
     public void update(User user){
