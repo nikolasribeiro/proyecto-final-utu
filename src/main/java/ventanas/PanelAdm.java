@@ -6,6 +6,9 @@ import equipos.Equipo;
 import equipos.EquiposDAO;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import pronostica.Pronostica;
 import pronostica.PronosticaDAO;
 import pronostica.PronosticaDetallado;
@@ -32,7 +35,9 @@ public class PanelAdm extends javax.swing.JFrame {
         loadData();
     }
     
-    private void setUsersIntoUsersListModel(){
+    public void setUsersIntoUsersListModel(){
+        userListModel.clear();
+        
         UserDAO userDao = new UserDAO();
         List<User> users = userDao.getAll();
         userList.setModel(userListModel);
@@ -161,10 +166,25 @@ public class PanelAdm extends javax.swing.JFrame {
         jScrollPane2.setViewportView(userList);
 
         addUserBtn.setText("Agregar");
+        addUserBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addUserBtnActionPerformed(evt);
+            }
+        });
 
         editUserBtn.setText("Editar");
+        editUserBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editUserBtnActionPerformed(evt);
+            }
+        });
 
         deleteUserBtn.setText("Eliminar");
+        deleteUserBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteUserBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -378,6 +398,35 @@ public class PanelAdm extends javax.swing.JFrame {
     private void btnAdminExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdminExitActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnAdminExitActionPerformed
+
+    private void addUserBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserBtnActionPerformed
+        NewUser newUserWindow = new NewUser(this);
+        newUserWindow.setVisible(true);
+    }//GEN-LAST:event_addUserBtnActionPerformed
+
+    private void deleteUserBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUserBtnActionPerformed
+        UserDAO userDao = new UserDAO();
+        List<User> users = userDao.getAll();
+        int encuentroSelectedIndex = userList.getSelectedIndex();
+        User userSelected = users.get(encuentroSelectedIndex);
+        int userConfirmation = JOptionPane.showConfirmDialog(rootPane, "Estas seguro que queres eliminar a "+userSelected.getName() + "?", "Confirmar", JOptionPane.INFORMATION_MESSAGE);
+        
+        if(userConfirmation == 0){
+            userDao.delete(userSelected.getLogin());
+            setUsersIntoUsersListModel();
+            return;
+        }
+    }//GEN-LAST:event_deleteUserBtnActionPerformed
+
+    private void editUserBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserBtnActionPerformed
+        UserDAO userDao = new UserDAO();
+        List<User> users = userDao.getAll();
+        int encuentroSelectedIndex = userList.getSelectedIndex();
+        User userSelected = users.get(encuentroSelectedIndex);
+        
+        NewUser newUserWindow = new NewUser(this, userSelected);
+        newUserWindow.setVisible(true);
+    }//GEN-LAST:event_editUserBtnActionPerformed
 
     /**
      * @param args the command line arguments

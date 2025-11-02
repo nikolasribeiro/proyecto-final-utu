@@ -57,7 +57,7 @@ public class MainWindow extends javax.swing.JFrame {
         
         System.out.println("Indice seleccionado: " + encuentroSelectedIndex);
         Encuentro encuentroSelected = encuentroList.get(encuentroSelectedIndex);
-        
+         
         eventTitle.setText("Encuentro: "+(encuentroSelectedIndex+1));
         localTeamName.setText(encuentroSelected.getNombreLocal());
         visitTeamName.setText(encuentroSelected.getNombreVisita());
