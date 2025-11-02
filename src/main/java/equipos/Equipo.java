@@ -11,11 +11,13 @@ package equipos;
 public class Equipo {
     private int idEquipo;
     private String nombre;
-    // Constructor para cuando creamos un nuevo equipo (el ID es autogenerado)
+    
+// Constructor para cuando creamos un nuevo equipo (el ID es autogenerado)
     public Equipo(String nombre) {
         this.nombre = nombre;
     }
-    // Constructor para cuando leemos un equipo de la BD (ya tiene ID)
+    
+// Constructor para cuando leemos un equipo de la BD (ya tiene ID)
     public Equipo(int idEquipo, String nombre) {
         this.idEquipo = idEquipo;
         this.nombre = nombre;

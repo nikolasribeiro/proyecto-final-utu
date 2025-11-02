@@ -18,14 +18,13 @@ import usuarios.UserDAO;
  * @author Leo
  */
 public class PanelAdm extends javax.swing.JFrame {
-    
-     private DefaultListModel<String> userListModel = new DefaultListModel<>();
-     private DefaultListModel<String> teamListModel = new DefaultListModel<>();
-     private DefaultListModel<String> eventListModel = new DefaultListModel<>();
-     private DefaultListModel<String> betListModel = new DefaultListModel<>();
-     private User userLoggedIn;
-     
-     
+
+    private DefaultListModel<String> userListModel = new DefaultListModel<>();
+    private DefaultListModel<String> teamListModel = new DefaultListModel<>();
+    private DefaultListModel<String> eventListModel = new DefaultListModel<>();
+    private DefaultListModel<String> betListModel = new DefaultListModel<>();
+    private User userLoggedIn;
+
     /**
      * Creates new form PanelAdm
      */
@@ -33,60 +32,63 @@ public class PanelAdm extends javax.swing.JFrame {
         initComponents();
         loadData();
     }
-    
+
     public PanelAdm(User userLoggedIn) {
         initComponents();
         loadData();
-        
+
         this.userLoggedIn = userLoggedIn;
     }
-    
-    public void setUsersIntoUsersListModel(){
+
+    public void setUsersIntoUsersListModel() {
         userListModel.clear();
-        
+
         UserDAO userDao = new UserDAO();
         List<User> users = userDao.getAll();
         userList.setModel(userListModel);
-        
-        for(int i = 0; i < users.size(); i++){
-            
-            if(users.get(i).getRole() == Rol.user){
-                String element = "Nombre: "+ users.get(i).getName() + " - Correo: " + users.get(i).getEmail() + " - Estado: " + users.get(i).getState();
-                userListModel.addElement(element);    
+
+        for (int i = 0; i < users.size(); i++) {
+
+            if (users.get(i).getRole() == Rol.user) {
+                String element = "Nombre: " + users.get(i).getName() + " - Correo: " + users.get(i).getEmail() + " - Estado: " + users.get(i).getState();
+                userListModel.addElement(element);
             }
         }
     }
-    
-    private void setTeamsIntoTeamListModel(){
+
+    public void setTeamsIntoTeamListModel() {
+        teamListModel.clear();
         EquiposDAO equipoDao = new EquiposDAO();
         List<Equipo> equipos = equipoDao.obtenerTodosLosEquipos();
         teamList.setModel(teamListModel);
-        
-        for(int i = 0; i < equipos.size(); i++){
-            String element = "ID: "+ equipos.get(i).getIdEquipo()+ " - Nombre: " + equipos.get(i).getNombre();
+
+        for (int i = 0; i < equipos.size(); i++) {
+            String element = "ID: " + equipos.get(i).getIdEquipo() + " - Nombre: " + equipos.get(i).getNombre();
             teamListModel.addElement(element);
         }
     }
-    
-    private void setEventsIntoEventListModel(){
+
+    public void setEventsIntoEventListModel() {
+        eventListModel.clear();
         EncuentroDAO encuentroDao = new EncuentroDAO();
         List<Encuentro> encuentros = encuentroDao.listar();
         eventList.setModel(eventListModel);
-        
-        for(int i = 0; i < encuentros.size(); i++){
-            String element = (i+1) + ") " + "Local: "+ encuentros.get(i).getNombreLocal() + " - Visitante: " + encuentros.get(i).getNombreVisita() + " - Estado del encuentro: " + encuentros.get(i).getEstado();
+
+        for (int i = 0; i < encuentros.size(); i++) {
+            String element = (i + 1) + ") " + "Local: " + encuentros.get(i).getNombreLocal() + " - Visitante: " + encuentros.get(i).getNombreVisita() + " - Estado del encuentro: " + encuentros.get(i).getEstado();
             eventListModel.addElement(element);
         }
     }
-    
-    private void setBetsIntoBetListModel(){
+
+    public void setBetsIntoBetListModel() {
+        betListModel.clear();
         PronosticoDetalladoDAO pronosticaDetalladoDao = new PronosticoDetalladoDAO();
         List<PronosticaDetallado> pronosticos = pronosticaDetalladoDao.listarTotalDePronosticosConDatosAdicionales();
         betList.setModel(betListModel);
-        
-        for(int i = 0; i < pronosticos.size(); i++){
-            String element = 
-                    "Partido: "
+
+        for (int i = 0; i < pronosticos.size(); i++) {
+            String element
+                    = "Partido: "
                     + pronosticos.get(i).getNombreLocal()
                     + " vs "
                     + pronosticos.get(i).getNombreVisita()
@@ -98,20 +100,18 @@ public class PanelAdm extends javax.swing.JFrame {
                     + " Visita: "
                     + pronosticos.get(i).getPrediccionVisita()
                     + ")";
-            
+
             betListModel.addElement(element);
         }
     }
-    
-    private void loadData(){
+
+    private void loadData() {
         setUsersIntoUsersListModel();
         setTeamsIntoTeamListModel();
         setEventsIntoEventListModel();
         setBetsIntoBetListModel();
     }
-    
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -232,10 +232,25 @@ public class PanelAdm extends javax.swing.JFrame {
         jScrollPane3.setViewportView(teamList);
 
         addTeamBtn.setText("Agregar");
+        addTeamBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addTeamBtnActionPerformed(evt);
+            }
+        });
 
         editTeamBtn.setText("Editar");
+        editTeamBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editTeamBtnActionPerformed(evt);
+            }
+        });
 
         deleteTeamBtn.setText("Eliminar");
+        deleteTeamBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteTeamBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -415,9 +430,9 @@ public class PanelAdm extends javax.swing.JFrame {
         List<User> users = userDao.getAll();
         int encuentroSelectedIndex = userList.getSelectedIndex();
         User userSelected = users.get(encuentroSelectedIndex);
-        int userConfirmation = JOptionPane.showConfirmDialog(rootPane, "Estas seguro que queres eliminar a "+userSelected.getName() + "?", "Confirmar", JOptionPane.INFORMATION_MESSAGE);
-        
-        if(userConfirmation == 0){
+        int userConfirmation = JOptionPane.showConfirmDialog(rootPane, "Estas seguro que queres eliminar a " + userSelected.getName() + "?", "Confirmar", JOptionPane.INFORMATION_MESSAGE);
+
+        if (userConfirmation == 0) {
             userDao.delete(userSelected.getLogin());
             setUsersIntoUsersListModel();
             return;
@@ -429,10 +444,46 @@ public class PanelAdm extends javax.swing.JFrame {
         List<User> users = userDao.getAll();
         int encuentroSelectedIndex = userList.getSelectedIndex();
         User userSelected = users.get(encuentroSelectedIndex);
-        
+
         NewUser newUserWindow = new NewUser(this, userSelected);
         newUserWindow.setVisible(true);
     }//GEN-LAST:event_editUserBtnActionPerformed
+
+    private void addTeamBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTeamBtnActionPerformed
+        NewTeam newTeamWindow = new NewTeam(this);
+        newTeamWindow.setVisible(true);
+    }//GEN-LAST:event_addTeamBtnActionPerformed
+
+    private void editTeamBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editTeamBtnActionPerformed
+        EquiposDAO equipoDao = new EquiposDAO();
+        List<Equipo> equipos = equipoDao.obtenerTodosLosEquipos();
+        int equipoSelectedIndex = teamList.getSelectedIndex();
+        
+        System.out.println("Index seleccionado: " + equipoSelectedIndex);
+        
+        Equipo teamSelected = equipos.get(equipoSelectedIndex);
+        
+        System.out.println("Equipo Seleccionado: " + teamSelected.getNombre());
+        
+        NewTeam newTeamWindow = new NewTeam(teamSelected, this);
+        newTeamWindow.setVisible(true);
+    }//GEN-LAST:event_editTeamBtnActionPerformed
+
+    private void deleteTeamBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteTeamBtnActionPerformed
+        EquiposDAO equipoDao = new EquiposDAO();
+        List<Equipo> equipos = equipoDao.obtenerTodosLosEquipos();
+        int equipoSelectedIndex = teamList.getSelectedIndex();
+        Equipo teamSelected = equipos.get(equipoSelectedIndex);
+        int userConfirmation = JOptionPane.showConfirmDialog(rootPane, "Estas seguro que queres eliminar a " + teamSelected.getNombre()+ "?", "Confirmar", JOptionPane.INFORMATION_MESSAGE);
+
+        if (userConfirmation == 0) {
+            equipoDao.eliminarEquipo(teamSelected.getIdEquipo());
+            setTeamsIntoTeamListModel();
+            return;
+        }
+        
+        
+    }//GEN-LAST:event_deleteTeamBtnActionPerformed
 
     /**
      * @param args the command line arguments
