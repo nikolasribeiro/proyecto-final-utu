@@ -79,7 +79,10 @@ public class UserDAO {
                 user.setState(Estado.desdeBD(rs.getString("estado")));
                 user.setRole(rs.getString("rol"));
                 user.setPoints(rs.getInt("puntos"));
-                users.add(user);
+                
+                if(!user.getRole().equals("admin")){
+                    users.add(user);
+                }
             }
         } catch (SQLException ex) {
             System.out.println(" Error al listar los pronósticos: " + ex.getMessage());
@@ -105,7 +108,7 @@ public class UserDAO {
             int affectedRows = statement.executeUpdate();
             
             if(affectedRows > 0){
-                System.out.println("Usuario '"+user.getLogin()+"' actualizado correctamente");
+                System.out.println("Usuario '"+ user.getLogin() + "' actualizado correctamente");
             }else{
                 System.out.println("El usuario seleccionado no existe");
             }
