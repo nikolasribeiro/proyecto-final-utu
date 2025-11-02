@@ -26,7 +26,7 @@ public class UserDAO {
             statement.setString(5, user.getEmail());
             statement.setString(6, user.getState().obtenerValorParaBD());
             statement.setInt(7, user.getPoints());
-            statement.setString(8, user.getRole());
+            statement.setString(8, user.getRole().obtenerValorParaBD());
             statement.executeUpdate();
             System.out.println("Usuario '"+user.getLogin()+"' creado exitosamente");
             
@@ -53,7 +53,7 @@ public class UserDAO {
                 user.setEmail(result.getString("correo"));
                 user.setState(Estado.desdeBD(result.getString("estado")));
                 user.setPoints(result.getInt("puntos"));
-                user.setRole(result.getString("rol"));
+                user.setRole(Rol.desdeBD(result.getString("rol")));
             }
         }catch(SQLException error){
             System.out.println("Ocurrio un error al obtener el usuario: " + error.getMessage());
@@ -77,10 +77,10 @@ public class UserDAO {
                 user.setGender( Genero.desdeBD( rs.getString("genero") ) );
                 user.setEmail(rs.getString("correo"));
                 user.setState(Estado.desdeBD(rs.getString("estado")));
-                user.setRole(rs.getString("rol"));
+                user.setRole(Rol.desdeBD(rs.getString("rol")));
                 user.setPoints(rs.getInt("puntos"));
                 
-                if(!user.getRole().equals("admin")){
+                if(user.getRole() == Rol.user){
                     users.add(user);
                 }
             }
@@ -102,7 +102,7 @@ public class UserDAO {
             statement.setString(4, user.getEmail());
             statement.setString(5, user.getState().obtenerValorParaBD());
             statement.setInt(6, user.getPoints());
-            statement.setString(7, user.getRole());
+            statement.setString(7, user.getRole().obtenerValorParaBD());
             statement.setString(8, user.getLogin());
             
             int affectedRows = statement.executeUpdate();
@@ -117,8 +117,6 @@ public class UserDAO {
         }catch(SQLException error){
             System.out.println("Algo salio mal durante la actualizacion del usuario: " + error.getMessage());
         }
-        
-    
     }
 
     public void delete (String login){

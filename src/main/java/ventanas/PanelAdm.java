@@ -7,12 +7,9 @@ import equipos.EquiposDAO;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import pronostica.Pronostica;
-import pronostica.PronosticaDAO;
 import pronostica.PronosticaDetallado;
 import pronostica.PronosticoDetalladoDAO;
+import usuarios.Rol;
 import usuarios.User;
 import usuarios.UserDAO;
 
@@ -26,13 +23,22 @@ public class PanelAdm extends javax.swing.JFrame {
      private DefaultListModel<String> teamListModel = new DefaultListModel<>();
      private DefaultListModel<String> eventListModel = new DefaultListModel<>();
      private DefaultListModel<String> betListModel = new DefaultListModel<>();
-
+     private User userLoggedIn;
+     
+     
     /**
      * Creates new form PanelAdm
      */
     public PanelAdm() {
         initComponents();
         loadData();
+    }
+    
+    public PanelAdm(User userLoggedIn) {
+        initComponents();
+        loadData();
+        
+        this.userLoggedIn = userLoggedIn;
     }
     
     public void setUsersIntoUsersListModel(){
@@ -44,7 +50,7 @@ public class PanelAdm extends javax.swing.JFrame {
         
         for(int i = 0; i < users.size(); i++){
             
-            if(!users.get(i).getLogin().equals("admin")){
+            if(users.get(i).getRole() == Rol.user){
                 String element = "Nombre: "+ users.get(i).getName() + " - Correo: " + users.get(i).getEmail() + " - Estado: " + users.get(i).getState();
                 userListModel.addElement(element);    
             }

@@ -25,5 +25,9 @@ public enum Genero {
         }
         return Genero.valueOf(genero);
     }
-
+    
+    @Override
+    public String toString(){
+        return this.valorEnBD;
+    }
 }

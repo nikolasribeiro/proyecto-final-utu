@@ -4,11 +4,13 @@
  */
 package ventanas;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import usuarios.Estado;
 import usuarios.Genero;
 import usuarios.User;
 import usuarios.UserDAO;
+import usuarios.Rol;
 
 /**
  *
@@ -23,26 +25,40 @@ public class NewUser extends javax.swing.JFrame {
      */
     public NewUser() {
         initComponents();
+        setComboboxes();
     }
     
     public NewUser(PanelAdm panelPadre) {
         initComponents();
+        setComboboxes();
         this.panelAdminPadre = panelPadre;
     }
     
     public NewUser(PanelAdm panelPadre, User userSelected) {
         initComponents();
+        setComboboxes();
         this.panelAdminPadre = panelPadre;
         this.userSelected = userSelected;
         
         loadUserDataIntoForm();
     }
-
+    
+    
+    private void setComboboxes(){
+        DefaultComboBoxModel genderComboBoxModel = new DefaultComboBoxModel<>(Genero.values());
+        DefaultComboBoxModel stateComboBoxModel = new DefaultComboBoxModel<>(Estado.values());
+        DefaultComboBoxModel roleComboBoxModel = new DefaultComboBoxModel<>(Rol.values());
+        genderTxt.setModel(genderComboBoxModel);
+        stateTxt.setModel(stateComboBoxModel);
+        roleTxt.setModel(roleComboBoxModel);
+    }
+    
     private void loadUserDataIntoForm() {
         title.setText("Editar Usuario: " + userSelected.getName());
         loginTxt.setText(userSelected.getLogin());
         loginTxt.setEnabled(false);
-        passwordTxt.setText(userSelected.getPassword());
+        lblPassword.setVisible(false);
+        passwordTxt.setVisible(false);
         nameTxt.setText(userSelected.getName());
         emailTxt.setText(userSelected.getEmail());
         btnAction.setText("Guardar Cambios");
@@ -62,7 +78,7 @@ public class NewUser extends javax.swing.JFrame {
         title = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         loginTxt = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
+        lblPassword = new javax.swing.JLabel();
         passwordTxt = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         emailTxt = new javax.swing.JTextField();
@@ -86,7 +102,7 @@ public class NewUser extends javax.swing.JFrame {
 
         jLabel2.setText("Usuario");
 
-        jLabel3.setText("Contraseña");
+        lblPassword.setText("Contraseña");
 
         jLabel4.setText("Correo");
 
@@ -141,7 +157,7 @@ public class NewUser extends javax.swing.JFrame {
                                     .addComponent(jLabel4)
                                     .addComponent(jLabel5)
                                     .addComponent(jLabel6)
-                                    .addComponent(jLabel3)
+                                    .addComponent(lblPassword)
                                     .addComponent(jLabel8))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(btnAction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -157,7 +173,7 @@ public class NewUser extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(loginTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
+                .addComponent(lblPassword)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(passwordTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -196,9 +212,9 @@ public class NewUser extends javax.swing.JFrame {
         // String gender = genderTxt.;
         
         // Casos hardcoded, se necesita capturar desde el combobox
-        Genero gender = Genero.femenino;
-        Estado state = Estado.activo;
-        String role = "user";
+        Genero gender = (Genero) genderTxt.getSelectedItem();
+        Estado state = (Estado) stateTxt.getSelectedItem();
+        Rol role = (Rol) roleTxt.getSelectedItem();
         
         User newUser = new User();
         UserDAO userDao = new UserDAO();
@@ -212,7 +228,7 @@ public class NewUser extends javax.swing.JFrame {
         newUser.setState(state);
         
         if(userSelected != null){
-         
+            
             userDao.update(newUser);
             
             if(panelAdminPadre != null){
@@ -276,12 +292,12 @@ public class NewUser extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> genderTxt;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel lblPassword;
     private javax.swing.JTextField loginTxt;
     private javax.swing.JTextField nameTxt;
     private javax.swing.JTextField passwordTxt;

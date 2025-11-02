@@ -6,7 +6,7 @@ package usuarios;
  */
 public enum Estado {
     activo("activo"),
-    baneado("baneado");
+    banneado("banneado");
     
     private final String valorEnBD;
     
@@ -20,5 +20,10 @@ public enum Estado {
     
     public static Estado desdeBD(String estado){
         return Estado.valueOf(estado);
+    }
+    
+    @Override
+    public String toString(){
+        return this.valorEnBD;
     }
 }
