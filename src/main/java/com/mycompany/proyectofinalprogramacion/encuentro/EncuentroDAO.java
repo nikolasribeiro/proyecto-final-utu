@@ -96,6 +96,35 @@ public class EncuentroDAO {
         } 
     }
     
+    public Encuentro traerEncuentro (int idEncuentro) {
+        String query = "SELECT * FROM encuentro WHERE idEncuentro= ?";
+        Encuentro encuentro = null;
+        try{
+            Connection conn = DBConnector.getConnection();
+            PreparedStatement statement = conn.prepareStatement(query);
+            
+            statement.setInt(1, idEncuentro);
+            ResultSet result = statement.executeQuery();
+            if(result.next()){
+                encuentro = new Encuentro();
+                encuentro.setIdEncuentro(result.getInt("idEncuentro"));
+                encuentro.setFecha(result.getString("fecha"));
+                encuentro.setHoraInicio(result.getString("horaInicio"));
+                encuentro.setHoraFin(result.getString("horaFin"));
+                encuentro.setEstado(result.getString("estado"));
+                
+                encuentro.setResultadoLocal(result.getInt("resultadoLocal"));
+                encuentro.setResultadoVisita(result.getInt("resultadoVisita"));
+                encuentro.setIdLocal(result.getInt("idLocal"));
+                encuentro.setIdVisita(result.getInt("idVisita"));
+            }
+        }catch(SQLException error){
+            System.out.println("Ocurrio un error al obtener el usuario: " + error.getMessage());
+        }
+        return encuentro;
+    
+    }
+    
     // Eliminar un encuentro
     public void borrarEncuentro (int idEncuentro){
         String sql = "DELETE FROM encuentro WHERE idEncuentro =?";

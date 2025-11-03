@@ -18,7 +18,8 @@ public class PronosticaDetallado {
     private int prediccionLocal; // La prediccion que hace el usuario para el locatario
     private int prediccionVisita; //La prediccion que hace el usuaruio para el visitante
     
-    // Se usa Integer, porque existen resultados o valores nulos. 
+    // Se usa Integer, porque existen resultados o valores nulos.
+    private int encuentroId;
     private Integer resultadoRealLocal; //El resultado final del partido, introducido por el administrador Locatario
     private Integer resultadoRealVisita; //El resultado final del partido, introducido por el administrador Visitante
     
@@ -95,6 +96,15 @@ public class PronosticaDetallado {
     public void setResultadoRealVisita(Integer resultadoRealVisita) {
         this.resultadoRealVisita = resultadoRealVisita;
     }
+    
+    public void setEncuentroId(int encuentroId){
+        this.encuentroId = encuentroId;
+    }
+    
+    public int getEncuentroId(){
+        return this.encuentroId;
+    }
+    
     
     @Override
     public String toString() {

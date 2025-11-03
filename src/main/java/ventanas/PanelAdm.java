@@ -90,6 +90,7 @@ public class PanelAdm extends javax.swing.JFrame {
         PronosticoDetalladoDAO pronosticaDetalladoDao = new PronosticoDetalladoDAO();
         List<PronosticaDetallado> pronosticos = pronosticaDetalladoDao.listarTotalDePronosticosConDatosAdicionales();
         betList.setModel(betListModel);
+        EncuentroDAO encuentroDao = new EncuentroDAO();
 
         for (int i = 0; i < pronosticos.size(); i++) {
             String element
@@ -106,6 +107,18 @@ public class PanelAdm extends javax.swing.JFrame {
                     + pronosticos.get(i).getPrediccionVisita()
                     + ")";
 
+            Encuentro encuentro = encuentroDao.traerEncuentro(pronosticos.get(i).getEncuentroId());
+
+            if (encuentro.getEstado().equals("finalizado")) {
+                element
+                        = element
+                        + " // Resultado del encuentro "
+                        + "Local: "
+                        + pronosticos.get(i).getResultadoRealLocal()
+                        + " - Visita: "
+                        + pronosticos.get(i).getResultadoRealVisita();
+            }
+
             betListModel.addElement(element);
         }
     }
@@ -115,10 +128,10 @@ public class PanelAdm extends javax.swing.JFrame {
         setTeamsIntoTeamListModel();
         setEventsIntoEventListModel();
         setBetsIntoBetListModel();
-        
+
         startEventBtn.setEnabled(false);
         deleteEventBtn.setEnabled(false);
-        
+
         eventList.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent evt) {
                 _eventListValueChanged(evt);
@@ -638,44 +651,43 @@ public class PanelAdm extends javax.swing.JFrame {
             PronosticoDetalladoDAO pronosticaDetalladoDao = new PronosticoDetalladoDAO();
             UserDAO userDao = new UserDAO();
             List<PronosticaDetallado> pronosticos = pronosticaDetalladoDao.listarTotalDePronosticosConDatosAdicionales();
-            
+
             // Inicio de logica de puntos
             for (PronosticaDetallado pronostico : pronosticos) {
                 // 0. Declaramos una variable en la que se tomaran el total de puntos
                 int points = 0;
                 // 1. Traemos el usuario que hizo un pronostico
                 User user = userDao.get(pronostico.getLogin());
-                
+
                 // 2. Verificamos el pronostico que hizo el usuario
                 int userLocalBet = pronostico.getPrediccionLocal();
                 int userVisitBet = pronostico.getPrediccionVisita();
-                
+
                 // 3. Validamos a ver si efectivamente el usuario acerto en su prediccion
-                
                 // acerto a que ganaba el local?
-                if(userLocalBet > pronostico.getResultadoRealVisita()){
+                if (userLocalBet > pronostico.getResultadoRealVisita()) {
                     points += 1;
                 }
-                
+
                 // acerto a que ganaba el visitante?
-                if(userVisitBet > pronostico.getResultadoRealLocal()){
-                    points +=1;
+                if (userVisitBet > pronostico.getResultadoRealLocal()) {
+                    points += 1;
                 }
-                
+
                 // acerto a que ganaba el local Y ADEMAS el resultado exacto?
-                if(userLocalBet > pronostico.getResultadoRealVisita() && userLocalBet == totalGoalsToLocal){
+                if (userLocalBet > pronostico.getResultadoRealVisita() && userLocalBet == totalGoalsToLocal) {
                     points += 5;
                 }
-                
+
                 // acerto a que ganaba la visita Y ADEMAS el resultado exacto?
-                if(userVisitBet > pronostico.getResultadoRealLocal() && userVisitBet == totalGoalsToVisit){
+                if (userVisitBet > pronostico.getResultadoRealLocal() && userVisitBet == totalGoalsToVisit) {
                     points += 5;
                 }
-                
+
                 // 4. Actualizamos los puntos totales del usuario
                 points = points + user.getPoints();
                 user.setPoints(points);
-                
+
                 userDao.update(user);
             }
 

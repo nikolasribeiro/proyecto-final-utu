@@ -13,28 +13,29 @@ import java.util.List;
  * @author Nicolas Ribeiro
  */
 public class PronosticoDetalladoDAO {
-    
+
     private String BASE_SQL_JOIN
-                = "SELECT"
-                + " p.login, "
-                + " u.nombre AS NombreUsuario, "
-                + " e.fecha, "
-                + " el.nombre AS NombreLocal, "
-                + " ev.nombre AS NombreVisita, "
-                + " p.resultadoLocal AS PrediccionLocal, "
-                + " p.resultadoVisita AS PrediccionVisita, "
-                + " e.resultadoLocal AS ResultadoRealLocal, "
-                + " e.resultadoVisita AS ResultadoRealVisita "
-                + "FROM "
-                + " pronostica AS p "
-                + "JOIN "
-                + " usuario AS u ON p.login = u.login "
-                + "JOIN "
-                + " encuentro AS e ON p.idEncuentro = e.idEncuentro "
-                + "JOIN "
-                + " equipo AS el ON e.idLocal = el.idEquipo "
-                + "JOIN "
-                + " equipo AS ev ON e.idVisita = ev.idEquipo";
+            = "SELECT"
+            + " p.login, "
+            + " u.nombre AS NombreUsuario, "
+            + " e.fecha, "
+            + " el.nombre AS NombreLocal, "
+            + " ev.nombre AS NombreVisita, "
+            + " p.resultadoLocal AS PrediccionLocal, "
+            + " p.resultadoVisita AS PrediccionVisita, "
+            + " e.idEncuentro as idEncuentro, "
+            + " e.resultadoLocal AS ResultadoRealLocal, "
+            + " e.resultadoVisita AS ResultadoRealVisita "
+            + "FROM "
+            + " pronostica AS p "
+            + "JOIN "
+            + " usuario AS u ON p.login = u.login "
+            + "JOIN "
+            + " encuentro AS e ON p.idEncuentro = e.idEncuentro "
+            + "JOIN "
+            + " equipo AS el ON e.idLocal = el.idEquipo "
+            + "JOIN "
+            + " equipo AS ev ON e.idVisita = ev.idEquipo";
 
     public List<PronosticaDetallado> listarTotalDePronosticosConDatosAdicionales() {
         List<PronosticaDetallado> pronosticosDetallados = new ArrayList<>();
@@ -54,10 +55,10 @@ public class PronosticoDetalladoDAO {
                 p.setNombreVisita(rs.getString("NombreVisita"));
                 p.setPrediccionLocal(rs.getInt("PrediccionLocal"));
                 p.setPrediccionVisita(rs.getInt("PrediccionVisita"));
-                
+                p.setEncuentroId(rs.getInt("idEncuentro"));
                 p.setResultadoRealLocal(rs.getObject("ResultadoRealLocal", Integer.class));
                 p.setResultadoRealVisita(rs.getObject("ResultadoRealVisita", Integer.class));
-                
+
                 pronosticosDetallados.add(p);
             }
         } catch (SQLException ex) {
