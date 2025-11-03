@@ -40,9 +40,8 @@ public class EncuentroDAO {
                 e.setNombreVisita(rs.getString("NombreVisita"));
                 e.setResultadoLocal((Integer)rs.getObject("resultadoLocal"));
                 e.setResultadoVisita((Integer)rs.getObject("resultadoVisita"));
-                if(!e.getEstado().equals("finalizado")){
-                    encuentros.add(e);
-                }
+                
+                encuentros.add(e);
             }           
         } catch (SQLException ex) {
             System.out.println("Error al listar el encuentro: " + ex.getMessage());
@@ -63,7 +62,7 @@ public class EncuentroDAO {
             ps.setTime(3, horaFin);
             ps.setString(4, estado);
             ps.setInt(5, idLocal);
-            ps.setInt(6, idLocal);
+            ps.setInt(6, idVisita);
             
             ps.executeUpdate();
             System.out.println("Encuentro agregado correctamente bro!");
@@ -71,6 +70,32 @@ public class EncuentroDAO {
             System.out.println("Algo hiciste mal pibe: " + e.getMessage());
         }
     }
+    
+    public void actualizarEncuentro(Encuentro encuentro){
+       String query = "UPDATE encuentro SET estado=?, resultadoLocal=?, resultadoVisita=? WHERE idEncuentro = ?";
+        try{
+            Connection conn = DBConnector.getConnection();
+            PreparedStatement statement = conn.prepareStatement(query);
+            
+            statement.setString(1, encuentro.getEstado());
+            statement.setObject(2, encuentro.getResultadoLocal());
+            statement.setObject(3, encuentro.getResultadoVisita());
+            statement.setInt(4, encuentro.getIdEncuentro());
+
+            int affectedRows = statement.executeUpdate();
+            
+            if(affectedRows > 0){
+                System.out.println("Encuentro '"+ encuentro.getIdEncuentro()+ "' actualizado correctamente");
+            }else{
+                System.out.println("El encuentro seleccionado no existe");
+            }
+            
+            
+        }catch(SQLException error){
+            System.out.println("Algo salio mal durante la actualizacion del usuario: " + error.getMessage());
+        } 
+    }
+    
     // Eliminar un encuentro
     public void borrarEncuentro (int idEncuentro){
         String sql = "DELETE FROM encuentro WHERE idEncuentro =?";

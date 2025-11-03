@@ -2,6 +2,7 @@ package ventanas;
 
 import com.mycompany.proyectofinalprogramacion.encuentro.Encuentro;
 import com.mycompany.proyectofinalprogramacion.encuentro.EncuentroDAO;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
@@ -40,7 +41,8 @@ public class MainWindow extends javax.swing.JFrame {
         _initialState();
         
         this.userLoggedIn = userLoggedIn;
- 
+        lblPoints.setText("Puntos: " + String.valueOf(userLoggedIn.getPoints()));
+        
         eventList.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent evt) {
                 _eventListValueChanged(evt);
@@ -51,7 +53,14 @@ public class MainWindow extends javax.swing.JFrame {
     
     private void _eventListValueChanged(ListSelectionEvent evt) {
         eventPanel.setVisible(true);
-        List<Encuentro> encuentroList = encuentroDao.listar();
+        List<Encuentro> tempEventList = encuentroDao.listar();
+        List<Encuentro> encuentroList = new ArrayList<Encuentro>();
+        
+        for(Encuentro tempEvent: tempEventList){
+            if(!tempEvent.getEstado().equals("finalizado")){
+                encuentroList.add(tempEvent);
+            }
+        }
         
         int encuentroSelectedIndex = eventList.getSelectedIndex();
         
@@ -68,8 +77,15 @@ public class MainWindow extends javax.swing.JFrame {
         eventPanel.setVisible(false);
         eventIdFromLabel.setVisible(false);
         eventList.setModel(eventListModel);
-        List<Encuentro> encuentroList = encuentroDao.listar();
-
+        List<Encuentro> tempEventList = encuentroDao.listar();
+        List<Encuentro> encuentroList = new ArrayList<Encuentro>();
+        
+        for(Encuentro tempEvent: tempEventList){
+            if(!tempEvent.getEstado().equals("finalizado")){
+                encuentroList.add(tempEvent);
+            }
+        }
+        
         for(int i = 0; i < encuentroList.size(); i++){
             
             if(!encuentroList.get(i).getEstado().equals("finalizado")){
@@ -233,6 +249,7 @@ public class MainWindow extends javax.swing.JFrame {
         Pronostica pronostico = new Pronostica(userLogin, Integer.parseInt(eventId), Integer.parseInt(localInputValue), Integer.parseInt(visitInputValue));
         PronosticaDAO pronosticaDao = new PronosticaDAO();
         pronosticaDao.create(pronostico);
+        eventPanel.setVisible(false);
         
         JOptionPane.showMessageDialog(eventPanel, "Pronostico añadido correctamente!");
     }//GEN-LAST:event_addBetActionPerformed

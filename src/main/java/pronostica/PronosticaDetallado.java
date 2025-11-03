@@ -96,5 +96,19 @@ public class PronosticaDetallado {
         this.resultadoRealVisita = resultadoRealVisita;
     }
     
-    
+    @Override
+    public String toString() {
+        return "Pronostico de: " 
+                + nombreUsuario 
+                + "Local: " 
+                + prediccionLocal
+                + " Visita: "
+                + prediccionVisita
+                + " Resultado Real Local: "
+                + resultadoRealLocal
+                + " Resultado Real visita: "
+                + resultadoRealVisita
+                + " Identificacion del usuario: "
+                + login;
+    }
 }

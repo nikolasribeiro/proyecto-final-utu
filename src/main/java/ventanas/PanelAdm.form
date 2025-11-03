@@ -312,12 +312,14 @@
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="191" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="119" max="-2" attributes="0"/>
                       <Component id="addBetBtn" min="-2" pref="175" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="editBetBtn" min="-2" pref="175" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="deleteBetBtn" min="-2" pref="175" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="refreshListBtn" min="-2" pref="175" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -332,8 +334,9 @@
                           <Component id="addBetBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="editBetBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="deleteBetBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="refreshListBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="16" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -379,6 +382,14 @@
                 <Property name="text" type="java.lang.String" value="Eliminar"/>
               </Properties>
             </Component>
+            <Component class="javax.swing.JButton" name="refreshListBtn">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Refrescar lista"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="refreshListBtnActionPerformed"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanel4">
@@ -402,7 +413,7 @@
                       <EmptySpace min="-2" pref="190" max="-2" attributes="0"/>
                       <Component id="addEventBtn" min="-2" pref="175" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="editEventBtn" min="-2" pref="175" max="-2" attributes="0"/>
+                      <Component id="startEventBtn" min="-2" pref="175" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="deleteEventBtn" min="-2" pref="175" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
@@ -417,7 +428,7 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="addEventBtn" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="editEventBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="startEventBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="deleteEventBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
@@ -455,16 +466,28 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Agregar"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addEventBtnActionPerformed"/>
+              </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="editEventBtn">
+            <Component class="javax.swing.JButton" name="startEventBtn">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Editar"/>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="0" green="99" red="33" type="rgb"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Comenzar Encuentro"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="startEventBtnActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="deleteEventBtn">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Eliminar"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteEventBtnActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

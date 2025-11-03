@@ -59,5 +59,18 @@ public class PronosticaDAO {
         }
     }
     
-
+    public void delete(int idEncuentro) {
+        String query = "DELETE FROM pronostica WHERE idEncuentro = ?;";
+        try{
+            Connection conn = DBConnector.getConnection();
+            PreparedStatement statement = conn.prepareStatement(query);
+            
+            statement.setInt(1, idEncuentro);
+            statement.executeUpdate();
+            System.out.println("Encuentro '"+ idEncuentro + "' Eliminado correctamente.");
+            
+        }catch(SQLException error){
+            System.out.println("Ocurrio un error al cargar el pronostico: " + error.getMessage());
+        }
+    }
 }
