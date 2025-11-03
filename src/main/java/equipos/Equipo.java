@@ -12,6 +12,8 @@ public class Equipo {
     private int idEquipo;
     private String nombre;
     
+    public Equipo(){}
+    
 // Constructor para cuando creamos un nuevo equipo (el ID es autogenerado)
     public Equipo(String nombre) {
         this.nombre = nombre;
@@ -43,6 +45,6 @@ public class Equipo {
     // Un método toString() es útil para imprimir el objeto
     @Override
     public String toString() {
-        return "Equipo [ID=" + idEquipo + ", Nombre=" + nombre + "]";
+        return nombre;
     }
 }

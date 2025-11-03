@@ -59,6 +59,26 @@ public class EquiposDAO {
         return equipos;
     }
     
+    public Equipo traerEquipo (int equipoId) {
+        String query = "SELECT * FROM equipo WHERE idEquipo= ?";
+        Equipo equipo = null;
+        try{
+            Connection conn = DBConnector.getConnection();
+            PreparedStatement statement = conn.prepareStatement(query);
+            
+            statement.setInt(1, equipoId);
+            ResultSet result = statement.executeQuery();
+            if(result.next()){
+                equipo = new Equipo();
+                equipo.setIdEquipo(result.getInt("idEquipo"));
+                equipo.setNombre(result.getString("nombre"));
+            }
+        }catch(SQLException error){
+            System.out.println("Ocurrio un error al obtener el equipo: " + error.getMessage());
+        }
+        return equipo;
+    }
+    
     /**
      * UPDATE: Actualiza el nombre de un equipo existente.
      */

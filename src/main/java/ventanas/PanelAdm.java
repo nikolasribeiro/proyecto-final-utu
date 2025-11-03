@@ -4,9 +4,14 @@ import com.mycompany.proyectofinalprogramacion.encuentro.Encuentro;
 import com.mycompany.proyectofinalprogramacion.encuentro.EncuentroDAO;
 import equipos.Equipo;
 import equipos.EquiposDAO;
+import java.awt.Color;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import pronostica.PronosticaDAO;
 import pronostica.PronosticaDetallado;
 import pronostica.PronosticoDetalladoDAO;
 import usuarios.Rol;
@@ -110,6 +115,15 @@ public class PanelAdm extends javax.swing.JFrame {
         setTeamsIntoTeamListModel();
         setEventsIntoEventListModel();
         setBetsIntoBetListModel();
+        
+        startEventBtn.setEnabled(false);
+        deleteEventBtn.setEnabled(false);
+        
+        eventList.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent evt) {
+                _eventListValueChanged(evt);
+            }
+        });
     }
 
     /**
@@ -143,11 +157,12 @@ public class PanelAdm extends javax.swing.JFrame {
         addBetBtn = new javax.swing.JButton();
         editBetBtn = new javax.swing.JButton();
         deleteBetBtn = new javax.swing.JButton();
+        refreshListBtn = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         eventList = new javax.swing.JList<>();
         addEventBtn = new javax.swing.JButton();
-        editEventBtn = new javax.swing.JButton();
+        startEventBtn = new javax.swing.JButton();
         deleteEventBtn = new javax.swing.JButton();
         btnAdminExit = new javax.swing.JButton();
 
@@ -297,6 +312,13 @@ public class PanelAdm extends javax.swing.JFrame {
 
         deleteBetBtn.setText("Eliminar");
 
+        refreshListBtn.setText("Refrescar lista");
+        refreshListBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshListBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -306,12 +328,14 @@ public class PanelAdm extends javax.swing.JFrame {
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 955, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(191, 191, 191)
+                .addGap(119, 119, 119)
                 .addComponent(addBetBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(editBetBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(deleteBetBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(refreshListBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -323,8 +347,9 @@ public class PanelAdm extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addBetBtn)
                     .addComponent(editBetBtn)
-                    .addComponent(deleteBetBtn))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(deleteBetBtn)
+                    .addComponent(refreshListBtn))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Pronosticos", jPanel3);
@@ -337,10 +362,26 @@ public class PanelAdm extends javax.swing.JFrame {
         jScrollPane5.setViewportView(eventList);
 
         addEventBtn.setText("Agregar");
+        addEventBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addEventBtnActionPerformed(evt);
+            }
+        });
 
-        editEventBtn.setText("Editar");
+        startEventBtn.setBackground(new java.awt.Color(51, 153, 0));
+        startEventBtn.setText("Comenzar Encuentro");
+        startEventBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startEventBtnActionPerformed(evt);
+            }
+        });
 
         deleteEventBtn.setText("Eliminar");
+        deleteEventBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteEventBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -354,7 +395,7 @@ public class PanelAdm extends javax.swing.JFrame {
                 .addGap(190, 190, 190)
                 .addComponent(addEventBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(editEventBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(startEventBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(deleteEventBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -367,7 +408,7 @@ public class PanelAdm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addEventBtn)
-                    .addComponent(editEventBtn)
+                    .addComponent(startEventBtn)
                     .addComponent(deleteEventBtn))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -416,6 +457,40 @@ public class PanelAdm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void _eventListValueChanged(ListSelectionEvent evt) {
+        int eventSelectedIndex = eventList.getSelectedIndex();
+        if (eventSelectedIndex == -1) {
+            return;
+        }
+
+        EncuentroDAO encuentroDao = new EncuentroDAO();
+        List<Encuentro> events = encuentroDao.listar();
+        Encuentro eventSelected = events.get(eventSelectedIndex);
+        startEventBtn.setEnabled(true);
+
+        if (eventSelected.getEstado().equals("habilitado")) {
+            startEventBtn.setText("Comenzar Evento");
+            startEventBtn.setBackground(Color.GREEN);
+            startEventBtn.setEnabled(true);
+            deleteEventBtn.setEnabled(false);
+        }
+
+        if (eventSelected.getEstado().equals("jugando")) {
+            startEventBtn.setText("Finalizar Evento");
+            startEventBtn.setBackground(Color.red);
+            startEventBtn.setEnabled(true);
+            deleteEventBtn.setEnabled(false);
+        }
+
+        if (eventSelected.getEstado().equals("finalizado")) {
+            startEventBtn.setText("Finalizar Evento");
+            startEventBtn.setEnabled(false);
+            deleteEventBtn.setEnabled(true);
+        }
+
+    }
+
+
     private void btnAdminExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdminExitActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnAdminExitActionPerformed
@@ -458,13 +533,13 @@ public class PanelAdm extends javax.swing.JFrame {
         EquiposDAO equipoDao = new EquiposDAO();
         List<Equipo> equipos = equipoDao.obtenerTodosLosEquipos();
         int equipoSelectedIndex = teamList.getSelectedIndex();
-        
+
         System.out.println("Index seleccionado: " + equipoSelectedIndex);
-        
+
         Equipo teamSelected = equipos.get(equipoSelectedIndex);
-        
+
         System.out.println("Equipo Seleccionado: " + teamSelected.getNombre());
-        
+
         NewTeam newTeamWindow = new NewTeam(teamSelected, this);
         newTeamWindow.setVisible(true);
     }//GEN-LAST:event_editTeamBtnActionPerformed
@@ -474,16 +549,146 @@ public class PanelAdm extends javax.swing.JFrame {
         List<Equipo> equipos = equipoDao.obtenerTodosLosEquipos();
         int equipoSelectedIndex = teamList.getSelectedIndex();
         Equipo teamSelected = equipos.get(equipoSelectedIndex);
-        int userConfirmation = JOptionPane.showConfirmDialog(rootPane, "Estas seguro que queres eliminar a " + teamSelected.getNombre()+ "?", "Confirmar", JOptionPane.INFORMATION_MESSAGE);
+        int userConfirmation = JOptionPane.showConfirmDialog(rootPane, "Estas seguro que queres eliminar a " + teamSelected.getNombre() + "?", "Confirmar", JOptionPane.INFORMATION_MESSAGE);
 
         if (userConfirmation == 0) {
             equipoDao.eliminarEquipo(teamSelected.getIdEquipo());
             setTeamsIntoTeamListModel();
             return;
         }
-        
-        
     }//GEN-LAST:event_deleteTeamBtnActionPerformed
+
+    private void addEventBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEventBtnActionPerformed
+        NewEvent newEventWindow = new NewEvent(this);
+        newEventWindow.setVisible(true);
+    }//GEN-LAST:event_addEventBtnActionPerformed
+
+    private void deleteEventBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEventBtnActionPerformed
+        int eventSelectedIndex = eventList.getSelectedIndex();
+        EncuentroDAO encuentroDao = new EncuentroDAO();
+        PronosticaDAO pronosticaDao = new PronosticaDAO();
+
+        List<Encuentro> events = encuentroDao.listar();
+        Encuentro eventSelected = events.get(eventSelectedIndex);
+
+        if (eventSelected.getEstado().equals("finalizado")) {
+            int userConfirmation = JOptionPane.showConfirmDialog(
+                    this,
+                    "Estas seguro que queres eliminar el evento: " + eventSelected.getFecha(),
+                    "Confirmar",
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if (userConfirmation == 0) {
+                pronosticaDao.delete(eventSelected.getIdEncuentro());
+                encuentroDao.borrarEncuentro(eventSelected.getIdEncuentro());
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Evento eliminado correctamente",
+                        "Exito",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+
+                setEventsIntoEventListModel();
+                return;
+            }
+        }
+
+        JOptionPane.showMessageDialog(
+                this,
+                "El evento no puede ser eliminado hasta que finalice",
+                "Error!",
+                JOptionPane.ERROR_MESSAGE
+        );
+        return;
+
+
+    }//GEN-LAST:event_deleteEventBtnActionPerformed
+
+    private void startEventBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startEventBtnActionPerformed
+        int eventSelectedIndex = eventList.getSelectedIndex();
+        EncuentroDAO encuentroDao = new EncuentroDAO();
+
+        List<Encuentro> events = encuentroDao.listar();
+        Encuentro eventSelected = events.get(eventSelectedIndex);
+
+        if (eventSelected.getEstado().equals("habilitado")) {
+            eventSelected.setEstado("jugando");
+            encuentroDao.actualizarEncuentro(eventSelected);
+            setEventsIntoEventListModel();
+
+            JOptionPane.showMessageDialog(rootPane, "Evento actualizado correctamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        if (eventSelected.getEstado().equals("jugando")) {
+            // Esta logica es unicamente para eventos que tengan
+            // el estado de jugando
+            // A partir de aca, los goles se setean automaticamente y
+            // se aplica la logica de el añadido de los puntos
+            int totalGoalsToLocal = ThreadLocalRandom.current().nextInt(6);
+            int totalGoalsToVisit = ThreadLocalRandom.current().nextInt(6);
+
+            eventSelected.setEstado("finalizado");
+            eventSelected.setResultadoLocal(totalGoalsToLocal);
+            eventSelected.setResultadoVisita(totalGoalsToVisit);
+            encuentroDao.actualizarEncuentro(eventSelected);
+            setEventsIntoEventListModel();
+
+            PronosticoDetalladoDAO pronosticaDetalladoDao = new PronosticoDetalladoDAO();
+            UserDAO userDao = new UserDAO();
+            List<PronosticaDetallado> pronosticos = pronosticaDetalladoDao.listarTotalDePronosticosConDatosAdicionales();
+            
+            // Inicio de logica de puntos
+            for (PronosticaDetallado pronostico : pronosticos) {
+                // 0. Declaramos una variable en la que se tomaran el total de puntos
+                int points = 0;
+                // 1. Traemos el usuario que hizo un pronostico
+                User user = userDao.get(pronostico.getLogin());
+                
+                // 2. Verificamos el pronostico que hizo el usuario
+                int userLocalBet = pronostico.getPrediccionLocal();
+                int userVisitBet = pronostico.getPrediccionVisita();
+                
+                // 3. Validamos a ver si efectivamente el usuario acerto en su prediccion
+                
+                // acerto a que ganaba el local?
+                if(userLocalBet > pronostico.getResultadoRealVisita()){
+                    points += 1;
+                }
+                
+                // acerto a que ganaba el visitante?
+                if(userVisitBet > pronostico.getResultadoRealLocal()){
+                    points +=1;
+                }
+                
+                // acerto a que ganaba el local Y ADEMAS el resultado exacto?
+                if(userLocalBet > pronostico.getResultadoRealVisita() && userLocalBet == totalGoalsToLocal){
+                    points += 5;
+                }
+                
+                // acerto a que ganaba la visita Y ADEMAS el resultado exacto?
+                if(userVisitBet > pronostico.getResultadoRealLocal() && userVisitBet == totalGoalsToVisit){
+                    points += 5;
+                }
+                
+                // 4. Actualizamos los puntos totales del usuario
+                points = points + user.getPoints();
+                user.setPoints(points);
+                
+                userDao.update(user);
+            }
+
+            JOptionPane.showMessageDialog(rootPane, "Evento actualizado correctamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+
+    }//GEN-LAST:event_startEventBtnActionPerformed
+
+    private void refreshListBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshListBtnActionPerformed
+        setBetsIntoBetListModel();
+    }//GEN-LAST:event_refreshListBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -532,7 +737,6 @@ public class PanelAdm extends javax.swing.JFrame {
     private javax.swing.JButton deleteTeamBtn;
     private javax.swing.JButton deleteUserBtn;
     private javax.swing.JButton editBetBtn;
-    private javax.swing.JButton editEventBtn;
     private javax.swing.JButton editTeamBtn;
     private javax.swing.JButton editUserBtn;
     private javax.swing.JList<String> eventList;
@@ -548,6 +752,8 @@ public class PanelAdm extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JButton refreshListBtn;
+    private javax.swing.JButton startEventBtn;
     private javax.swing.JList<String> teamList;
     private javax.swing.JList<String> userList;
     // End of variables declaration//GEN-END:variables

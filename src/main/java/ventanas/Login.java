@@ -9,6 +9,7 @@ import usuarios.Estado;
 import usuarios.Rol;
 import usuarios.UserDAO;
 import usuarios.User;
+
 /**
  *
  * @author Nicolas Pereyra
@@ -20,7 +21,7 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
-    }
+    } 
 
     /**
      * This method is called from within the constructor to initialize the form.
