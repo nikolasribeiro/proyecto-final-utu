@@ -178,6 +178,7 @@ public class PanelAdm extends javax.swing.JFrame {
         startEventBtn = new javax.swing.JButton();
         deleteEventBtn = new javax.swing.JButton();
         btnAdminExit = new javax.swing.JButton();
+        btnCerrar = new javax.swing.JButton();
 
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -435,6 +436,13 @@ public class PanelAdm extends javax.swing.JFrame {
             }
         });
 
+        btnCerrar.setText("Cerrar Sesion");
+        btnCerrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -442,24 +450,23 @@ public class PanelAdm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTabbedPane2)
-                        .addContainerGap())
+                    .addComponent(jTabbedPane2)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(369, 369, 369))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(btnAdminExit, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())))))
+                        .addComponent(jLabel1)
+                        .addGap(188, 188, 188)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnAdminExit, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
+                            .addComponent(btnCerrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(btnCerrar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnAdminExit)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -702,6 +709,20 @@ public class PanelAdm extends javax.swing.JFrame {
         setBetsIntoBetListModel();
     }//GEN-LAST:event_refreshListBtnActionPerformed
 
+    private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
+         // confirmar eleccion
+       int confirm = JOptionPane.showConfirmDialog(this, "Estas seguro capo?", "Cerrar Sesion", JOptionPane.YES_NO_OPTION);
+        
+        if (confirm == JOptionPane.YES_OPTION){
+            // cierra ventana actual
+            this.dispose();
+            
+            // abre la ventana login devuelta
+            Login login = new Login();
+            login.setVisible(true);
+        }
+    }//GEN-LAST:event_btnCerrarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -744,6 +765,7 @@ public class PanelAdm extends javax.swing.JFrame {
     private javax.swing.JButton addUserBtn;
     private javax.swing.JList<String> betList;
     private javax.swing.JButton btnAdminExit;
+    private javax.swing.JButton btnCerrar;
     private javax.swing.JButton deleteBetBtn;
     private javax.swing.JButton deleteEventBtn;
     private javax.swing.JButton deleteTeamBtn;
