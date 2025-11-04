@@ -37,7 +37,7 @@ public class PanelAdm extends javax.swing.JFrame {
         initComponents();
         loadData();
     }
-
+    
     public PanelAdm(User userLoggedIn) {
         initComponents();
         loadData();

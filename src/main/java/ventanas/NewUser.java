@@ -17,9 +17,11 @@ import usuarios.Rol;
  * @author Usuario
  */
 public class NewUser extends javax.swing.JFrame {
-    
+
     private PanelAdm panelAdminPadre;
     private User userSelected;
+    private User userLoggedIn;
+
     /**
      * Creates new form NewUser
      */
@@ -27,24 +29,34 @@ public class NewUser extends javax.swing.JFrame {
         initComponents();
         setComboboxes();
     }
-    
+
+    public NewUser(User user) {
+        initComponents();
+        setComboboxes();
+        this.userLoggedIn = user;
+
+        roleTxt.setVisible(false);
+        lblRole.setVisible(false);
+        stateTxt.setVisible(false);
+        lblState.setVisible(false);
+    }
+
     public NewUser(PanelAdm panelPadre) {
         initComponents();
         setComboboxes();
         this.panelAdminPadre = panelPadre;
     }
-    
+
     public NewUser(PanelAdm panelPadre, User userSelected) {
         initComponents();
         setComboboxes();
         this.panelAdminPadre = panelPadre;
         this.userSelected = userSelected;
-        
+
         loadUserDataIntoForm();
     }
-    
-    
-    private void setComboboxes(){
+
+    private void setComboboxes() {
         DefaultComboBoxModel genderComboBoxModel = new DefaultComboBoxModel<>(Genero.values());
         DefaultComboBoxModel stateComboBoxModel = new DefaultComboBoxModel<>(Estado.values());
         DefaultComboBoxModel roleComboBoxModel = new DefaultComboBoxModel<>(Rol.values());
@@ -52,7 +64,7 @@ public class NewUser extends javax.swing.JFrame {
         stateTxt.setModel(stateComboBoxModel);
         roleTxt.setModel(roleComboBoxModel);
     }
-    
+
     private void loadUserDataIntoForm() {
         title.setText("Editar Usuario: " + userSelected.getName());
         loginTxt.setText(userSelected.getLogin());
@@ -63,8 +75,7 @@ public class NewUser extends javax.swing.JFrame {
         emailTxt.setText(userSelected.getEmail());
         btnAction.setText("Guardar Cambios");
     }
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -84,9 +95,9 @@ public class NewUser extends javax.swing.JFrame {
         emailTxt = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         genderTxt = new javax.swing.JComboBox<>();
-        jLabel6 = new javax.swing.JLabel();
+        lblState = new javax.swing.JLabel();
         stateTxt = new javax.swing.JComboBox<>();
-        jLabel7 = new javax.swing.JLabel();
+        lblRole = new javax.swing.JLabel();
         roleTxt = new javax.swing.JComboBox<>();
         nameTxt = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
@@ -111,11 +122,11 @@ public class NewUser extends javax.swing.JFrame {
 
         genderTxt.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLabel6.setText("Estado");
+        lblState.setText("Estado");
 
         stateTxt.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLabel7.setText("Rol");
+        lblRole.setText("Rol");
 
         roleTxt.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -144,7 +155,7 @@ public class NewUser extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel7)
+                        .addComponent(lblRole)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -160,15 +171,14 @@ public class NewUser extends javax.swing.JFrame {
                                     .addComponent(jLabel2)
                                     .addComponent(jLabel4)
                                     .addComponent(jLabel5)
-                                    .addComponent(jLabel6)
+                                    .addComponent(lblState)
                                     .addComponent(lblPassword)
                                     .addComponent(jLabel8))
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(btnAction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 189, Short.MAX_VALUE)
-                        .addComponent(backBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnAction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 189, Short.MAX_VALUE)
+                                .addComponent(backBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap())))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -203,11 +213,11 @@ public class NewUser extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(genderTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel6)
+                .addComponent(lblState)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(stateTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel7)
+                .addComponent(lblRole)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(roleTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -223,16 +233,40 @@ public class NewUser extends javax.swing.JFrame {
         String password = passwordTxt.getText();
         String name = nameTxt.getText();
         String email = emailTxt.getText();
-        // String gender = genderTxt.;
+        UserDAO userDao = new UserDAO();
         
-        // Casos hardcoded, se necesita capturar desde el combobox
+        
+        if (this.userLoggedIn != null) {
+            Genero gender = (Genero) genderTxt.getSelectedItem();
+            Estado state = Estado.activo;
+            Rol role = Rol.user;
+
+            this.userLoggedIn.setLogin(login);
+            this.userLoggedIn.setEmail(email);
+            this.userLoggedIn.setName(name);
+            this.userLoggedIn.setPassword(password);
+            this.userLoggedIn.setGender(gender);
+            this.userLoggedIn.setRole(role);
+            this.userLoggedIn.setState(state);
+
+            userDao.create(this.userLoggedIn);
+
+            if (panelAdminPadre != null) {
+                panelAdminPadre.setUsersIntoUsersListModel();
+            }
+
+            JOptionPane.showMessageDialog(rootPane, "Usuario " + name + " creado exitosamente.", "Exito", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+            return;
+        }
+
         Genero gender = (Genero) genderTxt.getSelectedItem();
         Estado state = (Estado) stateTxt.getSelectedItem();
         Rol role = (Rol) roleTxt.getSelectedItem();
-        
+
         User newUser = new User();
-        UserDAO userDao = new UserDAO();
         
+
         newUser.setLogin(login);
         newUser.setEmail(email);
         newUser.setName(name);
@@ -240,33 +274,32 @@ public class NewUser extends javax.swing.JFrame {
         newUser.setGender(gender);
         newUser.setRole(role);
         newUser.setState(state);
-        
-        if(userSelected != null){
-            
+
+        if (userSelected != null) {
+
             userDao.update(newUser);
-            
-            if(panelAdminPadre != null){
+
+            if (panelAdminPadre != null) {
                 panelAdminPadre.setUsersIntoUsersListModel();
             }
 
-            JOptionPane.showMessageDialog(rootPane, "Usuario "+ name + " actualizado exitosamente.", "Exito", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "Usuario " + name + " actualizado exitosamente.", "Exito", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
             return;
         }
-        
-        
+
         userDao.create(newUser);
-        
-        if(panelAdminPadre != null){
+
+        if (panelAdminPadre != null) {
             panelAdminPadre.setUsersIntoUsersListModel();
         }
-        
-        JOptionPane.showMessageDialog(rootPane, "Usuario "+name+ " creado exitosamente.", "Exito", JOptionPane.INFORMATION_MESSAGE);
+
+        JOptionPane.showMessageDialog(rootPane, "Usuario " + name + " creado exitosamente.", "Exito", JOptionPane.INFORMATION_MESSAGE);
         this.dispose();
     }//GEN-LAST:event_btnActionActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
-       this.dispose();
+        this.dispose();
     }//GEN-LAST:event_backBtnActionPerformed
 
     /**
@@ -313,10 +346,10 @@ public class NewUser extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel lblPassword;
+    private javax.swing.JLabel lblRole;
+    private javax.swing.JLabel lblState;
     private javax.swing.JTextField loginTxt;
     private javax.swing.JTextField nameTxt;
     private javax.swing.JTextField passwordTxt;

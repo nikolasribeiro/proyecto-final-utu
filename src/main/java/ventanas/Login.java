@@ -39,6 +39,7 @@ public class Login extends javax.swing.JFrame {
         userName = new javax.swing.JTextField();
         userPassword = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        registerBtn = new javax.swing.JButton();
 
         jLabel1.setText("jLabel1");
 
@@ -71,6 +72,15 @@ public class Login extends javax.swing.JFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Bienvenido ingrese usuario y contraseña para acceder:");
 
+        registerBtn.setBackground(new java.awt.Color(0, 153, 153));
+        registerBtn.setText("Registrarse");
+        registerBtn.setOpaque(true);
+        registerBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                registerBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -90,7 +100,8 @@ public class Login extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(userPassword)
-                            .addComponent(userName))))
+                            .addComponent(userName)))
+                    .addComponent(registerBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(88, 88, 88))
         );
         layout.setVerticalGroup(
@@ -108,7 +119,9 @@ public class Login extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnLogin)
-                .addGap(77, 77, 77))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(registerBtn)
+                .addContainerGap())
         );
 
         pack();
@@ -160,14 +173,16 @@ public class Login extends javax.swing.JFrame {
                 mainAdmin.setVisible(true);
             }
             
-            
-            
+
             this.dispose();
         }
-        
-        
-        
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
+        User newUserRegistration = new User();
+        NewUser newUserWindow = new NewUser(newUserRegistration);
+        newUserWindow.setVisible(true);
+    }//GEN-LAST:event_registerBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -210,6 +225,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel lblusuario;
+    private javax.swing.JButton registerBtn;
     private javax.swing.JTextField userName;
     private javax.swing.JTextField userPassword;
     // End of variables declaration//GEN-END:variables

@@ -123,8 +123,17 @@ public class MainWindow extends javax.swing.JFrame {
         eventIdFromLabel = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         profileBtn = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        rankingList = new javax.swing.JList<>();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        betsRealizedList = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setLocation(new java.awt.Point(0, 0));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -143,7 +152,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jLabel2.setBackground(new java.awt.Color(0, 0, 0));
         jLabel2.setOpaque(true);
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(379, 6, 10, 210));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 1020, 10));
 
         lblPoints.setFont(new java.awt.Font("Segoe UI", 2, 18)); // NOI18N
         lblPoints.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -220,7 +229,7 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(visitFieldGoals, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblVersus))
                 .addGap(18, 18, 18)
-                .addComponent(addBet, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
+                .addComponent(addBet, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -228,10 +237,45 @@ public class MainWindow extends javax.swing.JFrame {
 
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
         jLabel3.setOpaque(true);
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(787, 6, 10, 210));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(787, 6, 10, 220));
 
         profileBtn.setText("Perfil");
-        getContentPane().add(profileBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(803, 189, 223, -1));
+        getContentPane().add(profileBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 150, 223, 60));
+
+        jLabel4.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel4.setOpaque(true);
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 220, 10, 410));
+
+        jLabel5.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel5.setOpaque(true);
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(379, 6, 10, 220));
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 2, 24)); // NOI18N
+        jLabel6.setText("Ranking total");
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 230, -1, -1));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 2, 24)); // NOI18N
+        jLabel7.setText("Pronosticos Realizados");
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, -1, -1));
+
+        rankingList.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        rankingList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(rankingList);
+
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 270, 470, 340));
+
+        betsRealizedList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane3.setViewportView(betsRealizedList);
+
+        getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 510, 340));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -291,6 +335,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBet;
+    private javax.swing.JList<String> betsRealizedList;
     private javax.swing.JLabel eventIdFromLabel;
     private javax.swing.JList<String> eventList;
     private javax.swing.JPanel eventPanel;
@@ -298,12 +343,19 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lblPoints;
     private javax.swing.JLabel lblVersus;
     private javax.swing.JTextField localFieldGoals;
     private javax.swing.JLabel localTeamName;
     private javax.swing.JButton profileBtn;
+    private javax.swing.JList<String> rankingList;
     private javax.swing.JTextField visitFieldGoals;
     private javax.swing.JLabel visitTeamName;
     // End of variables declaration//GEN-END:variables
