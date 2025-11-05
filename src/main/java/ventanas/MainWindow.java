@@ -17,87 +17,105 @@ import usuarios.User;
  * @author Nicolas Ribeiro
  */
 public class MainWindow extends javax.swing.JFrame {
-    
+
     private DefaultListModel<String> eventListModel = new DefaultListModel<>();
     private EncuentroDAO encuentroDao = new EncuentroDAO();
     private User userLoggedIn;
-    
+
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
         initComponents();
         _initialState();
-        
+
         eventList.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent evt) {
                 _eventListValueChanged(evt);
             }
         });
     }
-    
+
     public MainWindow(User userLoggedIn) {
         initComponents();
         _initialState();
-        
+
         this.userLoggedIn = userLoggedIn;
         lblPoints.setText("Puntos: " + String.valueOf(userLoggedIn.getPoints()));
-        
+
         eventList.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent evt) {
                 _eventListValueChanged(evt);
             }
         });
     }
-    
-    
+
     private void _eventListValueChanged(ListSelectionEvent evt) {
+        
+        
         eventPanel.setVisible(true);
         List<Encuentro> tempEventList = encuentroDao.listar();
         List<Encuentro> encuentroList = new ArrayList<Encuentro>();
-        
-        for(Encuentro tempEvent: tempEventList){
-            if(!tempEvent.getEstado().equals("finalizado")){
+
+        for (Encuentro tempEvent : tempEventList) {
+            if (!tempEvent.getEstado().equals("finalizado")) {
                 encuentroList.add(tempEvent);
             }
         }
-        
+
         int encuentroSelectedIndex = eventList.getSelectedIndex();
+        
+        if(encuentroSelectedIndex < 0){
+            return;
+        }
+        
         
         System.out.println("Indice seleccionado: " + encuentroSelectedIndex);
         Encuentro encuentroSelected = encuentroList.get(encuentroSelectedIndex);
-         
-        eventTitle.setText("Encuentro: "+(encuentroSelectedIndex+1));
+
+        eventTitle.setText("Encuentro: " + (encuentroSelectedIndex + 1));
         localTeamName.setText(encuentroSelected.getNombreLocal());
         visitTeamName.setText(encuentroSelected.getNombreVisita());
         eventIdFromLabel.setText(Integer.toString(encuentroSelected.getIdEncuentro()));
     }
     
-    public void _initialState(){
+    public void refreshMatchList() {
+        System.out.println("Estamos dentro de refreschMatchList");
+        eventListModel.clear();
+        System.out.println("Se elimino los elementos del modelo");
+        List<Encuentro> tempEventList = encuentroDao.listar();
+        System.out.println("Se llamo a encuentroDao.listar()");
+        List<Encuentro> encuentroList = new ArrayList<Encuentro>();
+        System.out.println("declaro el array vacio");
+        
+        for (Encuentro tempEvent : tempEventList) {
+            System.out.println("Dentro del for, validando que el evento no este en finalizado...");
+            if (!tempEvent.getEstado().equals("finalizado")) {
+                System.out.println("El evento NO esta finalizado");
+                encuentroList.add(tempEvent);
+                System.out.println("Se añadio evento a la lista: encuentroList");
+            }
+            System.out.println("El evento esta finalizado: " + tempEvent.getNombreLocal() + " vs " + tempEvent.getNombreVisita());
+        }
+        
+        System.out.println("Filtrado de lista terminado");
+        for (int i = 0; i < encuentroList.size(); i++) {
+            System.out.println("Iniciando loop de eventos ya filtrados");
+            String element = (i + 1) + ") " + "Local: " + encuentroList.get(i).getNombreLocal() + " - Visitante: " + encuentroList.get(i).getNombreVisita();
+            System.out.println("Seteo de eventos");
+            eventListModel.addElement(element);
+            System.out.println("Elemento añadido correctamente...");
+        }
+    }
+    
+    public void _initialState() {
         eventPanel.setVisible(false);
         eventIdFromLabel.setVisible(false);
         eventList.setModel(eventListModel);
-        List<Encuentro> tempEventList = encuentroDao.listar();
-        List<Encuentro> encuentroList = new ArrayList<Encuentro>();
-        
-        for(Encuentro tempEvent: tempEventList){
-            if(!tempEvent.getEstado().equals("finalizado")){
-                encuentroList.add(tempEvent);
-            }
-        }
-        
-        for(int i = 0; i < encuentroList.size(); i++){
-            
-            if(!encuentroList.get(i).getEstado().equals("finalizado")){
-                String element = (i+1) + ") " + "Local: "+ encuentroList.get(i).getNombreLocal() + " - Visitante: " + encuentroList.get(i).getNombreVisita();
-                eventListModel.addElement(element);    
-            }
-        }
-        
+        refreshMatchList();
+
     }
 
-    
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -132,6 +150,7 @@ public class MainWindow extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         betsRealizedList = new javax.swing.JList<>();
         btncerrar = new javax.swing.JButton();
+        refreshMatchBets = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocation(new java.awt.Point(0, 0));
@@ -139,7 +158,7 @@ public class MainWindow extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        jLabel1.setText("Tabla de Pronosticos");
+        jLabel1.setText("Tabla de Partidos");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 367, -1));
 
         eventList.setModel(new javax.swing.AbstractListModel<String>() {
@@ -149,7 +168,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(eventList);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 66, 367, -1));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 66, 367, 120));
 
         jLabel2.setBackground(new java.awt.Color(0, 0, 0));
         jLabel2.setOpaque(true);
@@ -286,6 +305,14 @@ public class MainWindow extends javax.swing.JFrame {
         });
         getContentPane().add(btncerrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 20, -1, -1));
 
+        refreshMatchBets.setText("Refrescar lista de Partidos");
+        refreshMatchBets.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshMatchBetsActionPerformed(evt);
+            }
+        });
+        getContentPane().add(refreshMatchBets, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 360, -1));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -298,28 +325,33 @@ public class MainWindow extends javax.swing.JFrame {
         String localInputValue = localFieldGoals.getText();
         String visitInputValue = visitFieldGoals.getText();
         String eventId = eventIdFromLabel.getText();
-        
+
         Pronostica pronostico = new Pronostica(userLogin, Integer.parseInt(eventId), Integer.parseInt(localInputValue), Integer.parseInt(visitInputValue));
         PronosticaDAO pronosticaDao = new PronosticaDAO();
         pronosticaDao.create(pronostico);
         eventPanel.setVisible(false);
-        
+
         JOptionPane.showMessageDialog(eventPanel, "Pronostico añadido correctamente!");
     }//GEN-LAST:event_addBetActionPerformed
 
     private void btncerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncerrarActionPerformed
         // confirmar eleccion
-       int confirm = JOptionPane.showConfirmDialog(this, "Estas seguro capo?", "Cerrar Sesion", JOptionPane.YES_NO_OPTION);
-        
-        if (confirm == JOptionPane.YES_OPTION){
+        int confirm = JOptionPane.showConfirmDialog(this, "Estas seguro capo?", "Cerrar Sesion", JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
             // cierra ventana actual
             this.dispose();
-            
+
             // abre la ventana login devuelta
             Login login = new Login();
             login.setVisible(true);
         }
     }//GEN-LAST:event_btncerrarActionPerformed
+
+    private void refreshMatchBetsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshMatchBetsActionPerformed
+        System.out.println("Accion de refresco triggereada");
+        refreshMatchList();
+    }//GEN-LAST:event_refreshMatchBetsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -380,6 +412,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel localTeamName;
     private javax.swing.JButton profileBtn;
     private javax.swing.JList<String> rankingList;
+    private javax.swing.JButton refreshMatchBets;
     private javax.swing.JTextField visitFieldGoals;
     private javax.swing.JLabel visitTeamName;
     // End of variables declaration//GEN-END:variables

@@ -60,6 +60,7 @@ public class PronosticoDetalladoDAO {
                 p.setResultadoRealVisita(rs.getObject("ResultadoRealVisita", Integer.class));
 
                 pronosticosDetallados.add(p);
+
             }
         } catch (SQLException ex) {
             System.out.println(" Error al listar los pronósticos: " + ex.getMessage());
