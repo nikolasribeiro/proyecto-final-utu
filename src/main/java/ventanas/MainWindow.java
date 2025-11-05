@@ -131,6 +131,7 @@ public class MainWindow extends javax.swing.JFrame {
         rankingList = new javax.swing.JList<>();
         jScrollPane3 = new javax.swing.JScrollPane();
         betsRealizedList = new javax.swing.JList<>();
+        btncerrar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocation(new java.awt.Point(0, 0));
@@ -157,7 +158,7 @@ public class MainWindow extends javax.swing.JFrame {
         lblPoints.setFont(new java.awt.Font("Segoe UI", 2, 18)); // NOI18N
         lblPoints.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblPoints.setText("Puntos: 0");
-        getContentPane().add(lblPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(803, 6, 210, 42));
+        getContentPane().add(lblPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(893, 6, 120, 42));
 
         eventPanel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         eventPanel.setMinimumSize(new java.awt.Dimension(374, 175));
@@ -277,6 +278,14 @@ public class MainWindow extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 510, 340));
 
+        btncerrar.setText("Cerrar sesion");
+        btncerrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btncerrarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btncerrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 20, -1, -1));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -297,6 +306,20 @@ public class MainWindow extends javax.swing.JFrame {
         
         JOptionPane.showMessageDialog(eventPanel, "Pronostico añadido correctamente!");
     }//GEN-LAST:event_addBetActionPerformed
+
+    private void btncerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncerrarActionPerformed
+        // confirmar eleccion
+       int confirm = JOptionPane.showConfirmDialog(this, "Estas seguro capo?", "Cerrar Sesion", JOptionPane.YES_NO_OPTION);
+        
+        if (confirm == JOptionPane.YES_OPTION){
+            // cierra ventana actual
+            this.dispose();
+            
+            // abre la ventana login devuelta
+            Login login = new Login();
+            login.setVisible(true);
+        }
+    }//GEN-LAST:event_btncerrarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -336,6 +359,7 @@ public class MainWindow extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBet;
     private javax.swing.JList<String> betsRealizedList;
+    private javax.swing.JButton btncerrar;
     private javax.swing.JLabel eventIdFromLabel;
     private javax.swing.JList<String> eventList;
     private javax.swing.JPanel eventPanel;
