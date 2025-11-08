@@ -140,4 +140,29 @@ public class UserDAO {
             System.out.println("Algo salio mal al eliminar el usuario: "+error.getMessage());
         }
     }
+    
+    public List<String> getRankingSorted () {
+        List<String> ranking = new ArrayList<>();
+        String sql = "SELECT nombre,rol,puntos FROM usuario ORDER BY puntos DESC;";
+        
+        // Usamos try-with-resources para asegurar el cierre automático
+        try (Connection conn = DBConnector.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                User user = new User();
+                user.setName(rs.getString("nombre"));
+                user.setRole(Rol.desdeBD(rs.getString("rol")));
+                user.setPoints(rs.getInt("puntos"));
+                
+                if(user.getRole() == Rol.user){
+                    ranking.add("Nombre: " + user.getName() + " | Puntos: " + user.getPoints());
+                }
+            }
+        } catch (SQLException ex) {
+            System.out.println(" Error al listar el ranking: " + ex.getMessage());
+        }
+        return ranking;
+    }
 }
