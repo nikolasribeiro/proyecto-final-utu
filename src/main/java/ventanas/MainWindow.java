@@ -10,7 +10,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import pronostica.Pronostica;
 import pronostica.PronosticaDAO;
+import pronostica.PronosticaDetallado;
+import pronostica.PronosticoDetalladoDAO;
 import usuarios.User;
+import usuarios.UserDAO;
 
 /**
  *
@@ -19,28 +22,23 @@ import usuarios.User;
 public class MainWindow extends javax.swing.JFrame {
 
     private DefaultListModel<String> eventListModel = new DefaultListModel<>();
+    private DefaultListModel<String> rankingListModel = new DefaultListModel<>();
+    private DefaultListModel<String> betsListModel = new DefaultListModel<>();
     private EncuentroDAO encuentroDao = new EncuentroDAO();
+    private UserDAO userDao = new UserDAO();
+    private PronosticoDetalladoDAO pronosticoDetalladoDao = new PronosticoDetalladoDAO();
     private User userLoggedIn;
 
-    /**
-     * Creates new form MainWindow
-     */
-    public MainWindow() {
-        initComponents();
-        _initialState();
-
-        eventList.addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent evt) {
-                _eventListValueChanged(evt);
-            }
-        });
-    }
 
     public MainWindow(User userLoggedIn) {
         initComponents();
         _initialState();
-
         this.userLoggedIn = userLoggedIn;
+        
+        
+        refreshRankingList();
+        refreshBetsList();
+        
         lblPoints.setText("Puntos: " + String.valueOf(userLoggedIn.getPoints()));
 
         eventList.addListSelectionListener(new ListSelectionListener() {
@@ -49,20 +47,26 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
     }
-
-    private void _eventListValueChanged(ListSelectionEvent evt) {
-        
-        
-        eventPanel.setVisible(true);
+    
+    private List<Encuentro> obtenerEncuentros(){
         List<Encuentro> tempEventList = encuentroDao.listar();
         List<Encuentro> encuentroList = new ArrayList<Encuentro>();
 
         for (Encuentro tempEvent : tempEventList) {
-            if (!tempEvent.getEstado().equals("finalizado")) {
+            if (tempEvent.getEstado().equals("habilitado")) {
                 encuentroList.add(tempEvent);
             }
         }
-
+        
+        return encuentroList;
+    }
+    
+    private void _eventListValueChanged(ListSelectionEvent evt) {
+        eventPanel.setVisible(true);
+        localFieldGoals.setText("");
+        visitFieldGoals.setText("");
+        List<Encuentro> encuentroList = obtenerEncuentros();
+        
         int encuentroSelectedIndex = eventList.getSelectedIndex();
         
         if(encuentroSelectedIndex < 0){
@@ -82,21 +86,7 @@ public class MainWindow extends javax.swing.JFrame {
     public void refreshMatchList() {
         System.out.println("Estamos dentro de refreschMatchList");
         eventListModel.clear();
-        System.out.println("Se elimino los elementos del modelo");
-        List<Encuentro> tempEventList = encuentroDao.listar();
-        System.out.println("Se llamo a encuentroDao.listar()");
-        List<Encuentro> encuentroList = new ArrayList<Encuentro>();
-        System.out.println("declaro el array vacio");
-        
-        for (Encuentro tempEvent : tempEventList) {
-            System.out.println("Dentro del for, validando que el evento no este en finalizado...");
-            if (!tempEvent.getEstado().equals("finalizado")) {
-                System.out.println("El evento NO esta finalizado");
-                encuentroList.add(tempEvent);
-                System.out.println("Se añadio evento a la lista: encuentroList");
-            }
-            System.out.println("El evento esta finalizado: " + tempEvent.getNombreLocal() + " vs " + tempEvent.getNombreVisita());
-        }
+        List<Encuentro> encuentroList = obtenerEncuentros();
         
         System.out.println("Filtrado de lista terminado");
         for (int i = 0; i < encuentroList.size(); i++) {
@@ -108,12 +98,54 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }
     
+    public void refreshRankingList(){
+        rankingListModel.clear();
+        List<String> rankings = userDao.getRankingSorted();
+        
+        for(String ranking: rankings){
+            rankingListModel.addElement(ranking);
+        }
+    }
+    
+    public void refreshBetsList (){
+        betsListModel.clear();
+        List<PronosticaDetallado> pronosticos = pronosticoDetalladoDao.listarTotalDePronosticosConDatosAdicionalesPorUsuario(userLoggedIn);
+        
+        for (PronosticaDetallado pronostico : pronosticos) {
+            String element
+                    = "Partido: "
+                    + pronostico.getNombreLocal()
+                    + " vs "
+                    + pronostico.getNombreVisita()
+                    + " || Local: "
+                    + pronostico.getPrediccionLocal()
+                    + " Visita: "
+                    + pronostico.getPrediccionVisita()
+                    + "";
+
+            Encuentro encuentro = encuentroDao.traerEncuentro(pronostico.getEncuentroId());
+
+            if (encuentro.getEstado().equals("finalizado")) {
+                element
+                        = element
+                        + " || Resultado del encuentro "
+                        + "Local: "
+                        + pronostico.getResultadoRealLocal()
+                        + " - Visita: "
+                        + pronostico.getResultadoRealVisita();
+            }
+
+            betsListModel.addElement(element);
+        }
+    }
+    
     public void _initialState() {
         eventPanel.setVisible(false);
         eventIdFromLabel.setVisible(false);
         eventList.setModel(eventListModel);
+        rankingList.setModel(rankingListModel);
+        betsRealizedList.setModel(betsListModel);
         refreshMatchList();
-
     }
 
     /**
@@ -151,6 +183,7 @@ public class MainWindow extends javax.swing.JFrame {
         betsRealizedList = new javax.swing.JList<>();
         btncerrar = new javax.swing.JButton();
         refreshMatchBets = new javax.swing.JButton();
+        refreshListsBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocation(new java.awt.Point(0, 0));
@@ -260,11 +293,16 @@ public class MainWindow extends javax.swing.JFrame {
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(787, 6, 10, 220));
 
         profileBtn.setText("Perfil");
+        profileBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                profileBtnActionPerformed(evt);
+            }
+        });
         getContentPane().add(profileBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 150, 223, 60));
 
         jLabel4.setBackground(new java.awt.Color(0, 0, 0));
         jLabel4.setOpaque(true);
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 220, 10, 410));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 220, 10, 350));
 
         jLabel5.setBackground(new java.awt.Color(0, 0, 0));
         jLabel5.setOpaque(true);
@@ -286,7 +324,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(rankingList);
 
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 270, 470, 340));
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 270, 470, 310));
 
         betsRealizedList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -295,7 +333,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(betsRealizedList);
 
-        getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 510, 340));
+        getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 510, 310));
 
         btncerrar.setText("Cerrar sesion");
         btncerrar.addActionListener(new java.awt.event.ActionListener() {
@@ -312,6 +350,14 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
         getContentPane().add(refreshMatchBets, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 360, -1));
+
+        refreshListsBtn.setText("Actualizar listas");
+        refreshListsBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshListsBtnActionPerformed(evt);
+            }
+        });
+        getContentPane().add(refreshListsBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 580, 1010, 40));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -331,6 +377,7 @@ public class MainWindow extends javax.swing.JFrame {
         pronosticaDao.create(pronostico);
         eventPanel.setVisible(false);
 
+        refreshBetsList();
         JOptionPane.showMessageDialog(eventPanel, "Pronostico añadido correctamente!");
     }//GEN-LAST:event_addBetActionPerformed
 
@@ -353,40 +400,17 @@ public class MainWindow extends javax.swing.JFrame {
         refreshMatchList();
     }//GEN-LAST:event_refreshMatchBetsActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void profileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profileBtnActionPerformed
+        User currentUserLoggedIn = userDao.get(this.userLoggedIn.getLogin());
+        ProfileWindow profileWindow = new ProfileWindow(currentUserLoggedIn, this);
+        profileWindow.setVisible(true);
+    }//GEN-LAST:event_profileBtnActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainWindow().setVisible(true);
-            }
-        });
-    }
+    private void refreshListsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshListsBtnActionPerformed
+        refreshBetsList();
+        refreshRankingList();
+    }//GEN-LAST:event_refreshListsBtnActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBet;
@@ -412,6 +436,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel localTeamName;
     private javax.swing.JButton profileBtn;
     private javax.swing.JList<String> rankingList;
+    private javax.swing.JButton refreshListsBtn;
     private javax.swing.JButton refreshMatchBets;
     private javax.swing.JTextField visitFieldGoals;
     private javax.swing.JLabel visitTeamName;
