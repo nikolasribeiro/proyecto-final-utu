@@ -28,6 +28,7 @@ public class PanelAdm extends javax.swing.JFrame {
     private DefaultListModel<String> teamListModel = new DefaultListModel<>();
     private DefaultListModel<String> eventListModel = new DefaultListModel<>();
     private DefaultListModel<String> betListModel = new DefaultListModel<>();
+    private EncuentroDAO encuentroDao = new EncuentroDAO();
     private User userLoggedIn;
 
     /**
@@ -602,13 +603,177 @@ public class PanelAdm extends javax.swing.JFrame {
                 JOptionPane.ERROR_MESSAGE
         );
         return;
-
-
     }//GEN-LAST:event_deleteEventBtnActionPerformed
+
+    private void setMatchAutomaticallyGoals(Encuentro eventSelected) {
+        // Esta logica es unicamente para eventos que tengan
+        // el estado de jugando
+        // A partir de aca, los goles se setean automaticamente y
+        // se aplica la logica de el añadido de los puntos
+
+        int totalGoalsToLocal = ThreadLocalRandom.current().nextInt(6);
+        int totalGoalsToVisit = ThreadLocalRandom.current().nextInt(6);
+
+        eventSelected.setEstado("finalizado");
+        eventSelected.setResultadoLocal(totalGoalsToLocal);
+        eventSelected.setResultadoVisita(totalGoalsToVisit);
+        encuentroDao.actualizarEncuentro(eventSelected);
+
+        PronosticoDetalladoDAO pronosticaDetalladoDao = new PronosticoDetalladoDAO();
+        UserDAO userDao = new UserDAO();
+        List<PronosticaDetallado> pronosticos = pronosticaDetalladoDao.listarTotalDePronosticosConDatosAdicionales();
+
+        System.out.println("PanelAdm: ==== Inicio del for ===");
+        // Inicio de logica de puntos
+        for (PronosticaDetallado pronostico : pronosticos) {
+
+            if (pronostico.getEncuentroId() != eventSelected.getIdEncuentro()) {
+                continue;
+            }
+
+            // 0. Declaramos una variable en la que se tomaran el total de puntos
+            int points = 0;
+
+            // 1. Traemos el usuario que hizo un pronostico
+            User user = userDao.get(pronostico.getLogin());
+
+            // 2. Verificamos el pronostico que hizo el usuario
+            int userLocalBet = pronostico.getPrediccionLocal();
+            int userVisitBet = pronostico.getPrediccionVisita();
+
+            int realLocalResult = pronostico.getResultadoRealLocal();
+            int realVisitResult = pronostico.getResultadoRealVisita();
+
+            boolean userLocalWinPrediction = userLocalBet > userVisitBet;
+            boolean userVisitWinPrediction = userVisitBet > userLocalBet;
+
+            boolean realLocalWin = realLocalResult > realVisitResult;
+            boolean realVisitWin = realVisitResult > realLocalResult;
+
+            // 3. Validamos a ver si efectivamente el usuario acerto en su prediccion
+            // acerto a que ganaba el local?
+            if (userLocalWinPrediction && realLocalWin) {
+                points += 1;
+
+                // acerto a que ganaba el local Y ADEMAS el resultado exacto?
+                if (userLocalBet == realLocalResult && userVisitBet == realVisitResult) {
+                    points += 5;
+                }
+            }
+
+            // acerto a que ganaba el visitante?
+            if (userVisitWinPrediction && realVisitWin) {
+                points += 1;
+
+                // acerto a que ganaba la visita Y ADEMAS el resultado exacto?
+                if (userVisitBet == realVisitResult && userLocalBet == realLocalResult) {
+                    points += 5;
+                }
+            }
+
+            // acerto al empate?
+            if (userVisitBet == realLocalResult && realVisitResult == realLocalResult) {
+                points += 5;
+            }
+
+            // 4. Actualizamos los puntos totales del usuario
+            points = points + user.getPoints();
+            user.setPoints(points);
+            userDao.update(user);
+        }
+        System.out.println("PanelAdm: ==== Fin del for ===");
+        setEventsIntoEventListModel();
+
+        JOptionPane.showMessageDialog(rootPane, "Evento actualizado correctamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
+        return;
+    }
+    
+    public void setMatchManuallyGoals(Encuentro eventSelected, int localGoals, int visitGoals) {
+        // Esta logica es unicamente para ser ejecutada dentro de la ventana
+        // ResultMatchWindow
+        // A partir de aca, los goles se setean manualmente y
+        // se aplica la logica de el añadido de los puntos
+
+        int totalGoalsToLocal = localGoals;
+        int totalGoalsToVisit = visitGoals;
+
+        eventSelected.setEstado("finalizado");
+        eventSelected.setResultadoLocal(totalGoalsToLocal);
+        eventSelected.setResultadoVisita(totalGoalsToVisit);
+        encuentroDao.actualizarEncuentro(eventSelected);
+
+        PronosticoDetalladoDAO pronosticaDetalladoDao = new PronosticoDetalladoDAO();
+        UserDAO userDao = new UserDAO();
+        List<PronosticaDetallado> pronosticos = pronosticaDetalladoDao.listarTotalDePronosticosConDatosAdicionales();
+
+        System.out.println("PanelAdm: ==== Inicio del for ===");
+        // Inicio de logica de puntos
+        for (PronosticaDetallado pronostico : pronosticos) {
+
+            if (pronostico.getEncuentroId() != eventSelected.getIdEncuentro()) {
+                continue;
+            }
+
+            // 0. Declaramos una variable en la que se tomaran el total de puntos
+            int points = 0;
+
+            // 1. Traemos el usuario que hizo un pronostico
+            User user = userDao.get(pronostico.getLogin());
+
+            // 2. Verificamos el pronostico que hizo el usuario
+            int userLocalBet = pronostico.getPrediccionLocal();
+            int userVisitBet = pronostico.getPrediccionVisita();
+
+            int realLocalResult = pronostico.getResultadoRealLocal();
+            int realVisitResult = pronostico.getResultadoRealVisita();
+
+            boolean userLocalWinPrediction = userLocalBet > userVisitBet;
+            boolean userVisitWinPrediction = userVisitBet > userLocalBet;
+
+            boolean realLocalWin = realLocalResult > realVisitResult;
+            boolean realVisitWin = realVisitResult > realLocalResult;
+
+            // 3. Validamos a ver si efectivamente el usuario acerto en su prediccion
+            // acerto a que ganaba el local?
+            if (userLocalWinPrediction && realLocalWin) {
+                points += 1;
+
+                // acerto a que ganaba el local Y ADEMAS el resultado exacto?
+                if (userLocalBet == realLocalResult && userVisitBet == realVisitResult) {
+                    points += 5;
+                }
+            }
+
+            // acerto a que ganaba el visitante?
+            if (userVisitWinPrediction && realVisitWin) {
+                points += 1;
+
+                // acerto a que ganaba la visita Y ADEMAS el resultado exacto?
+                if (userVisitBet == realVisitResult && userLocalBet == realLocalResult) {
+                    points += 5;
+                }
+            }
+
+            // acerto al empate?
+            if (userVisitBet == realLocalResult && realVisitResult == realLocalResult) {
+                points += 5;
+            }
+
+            // 4. Actualizamos los puntos totales del usuario
+            points = points + user.getPoints();
+            user.setPoints(points);
+            userDao.update(user);
+        }
+        System.out.println("PanelAdm: ==== Fin del for ===");
+        setEventsIntoEventListModel();
+
+        JOptionPane.showMessageDialog(rootPane, "Evento actualizado correctamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
+        return;
+    }
 
     private void startEventBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startEventBtnActionPerformed
         int eventSelectedIndex = eventList.getSelectedIndex();
-        EncuentroDAO encuentroDao = new EncuentroDAO();
+       
 
         List<Encuentro> events = encuentroDao.listar();
         Encuentro eventSelected = events.get(eventSelectedIndex);
@@ -623,87 +788,23 @@ public class PanelAdm extends javax.swing.JFrame {
         }
 
         if (eventSelected.getEstado().equals("jugando")) {
-            // Esta logica es unicamente para eventos que tengan
-            // el estado de jugando
-            // A partir de aca, los goles se setean automaticamente y
-            // se aplica la logica de el añadido de los puntos
-
-            int totalGoalsToLocal = ThreadLocalRandom.current().nextInt(6);
-            int totalGoalsToVisit = ThreadLocalRandom.current().nextInt(6);
-
-
-            eventSelected.setEstado("finalizado");
-            eventSelected.setResultadoLocal(totalGoalsToLocal);
-            eventSelected.setResultadoVisita(totalGoalsToVisit);
-            encuentroDao.actualizarEncuentro(eventSelected);
-
-            PronosticoDetalladoDAO pronosticaDetalladoDao = new PronosticoDetalladoDAO();
-            UserDAO userDao = new UserDAO();
-            List<PronosticaDetallado> pronosticos = pronosticaDetalladoDao.listarTotalDePronosticosConDatosAdicionales();
-
-            System.out.println("PanelAdm: ==== Inicio del for ===");
-            // Inicio de logica de puntos
-            for (PronosticaDetallado pronostico : pronosticos) {
-
-                if (pronostico.getEncuentroId() != eventSelected.getIdEncuentro()) {
-                    continue;
-                }
-
-                // 0. Declaramos una variable en la que se tomaran el total de puntos
-                int points = 0;
-
-                // 1. Traemos el usuario que hizo un pronostico
-                User user = userDao.get(pronostico.getLogin());
-
-                // 2. Verificamos el pronostico que hizo el usuario
-                int userLocalBet = pronostico.getPrediccionLocal();
-                int userVisitBet = pronostico.getPrediccionVisita();
-
-                int realLocalResult = pronostico.getResultadoRealLocal();
-                int realVisitResult = pronostico.getResultadoRealVisita();
-
-                boolean userLocalWinPrediction = userLocalBet > userVisitBet;
-                boolean userVisitWinPrediction = userVisitBet > userLocalBet;
-
-                boolean realLocalWin = realLocalResult > realVisitResult;
-                boolean realVisitWin = realVisitResult > realLocalResult;
-
-                // 3. Validamos a ver si efectivamente el usuario acerto en su prediccion
-                // acerto a que ganaba el local?
-                if (userLocalWinPrediction && realLocalWin) {
-                    points += 1;
-
-                    // acerto a que ganaba el local Y ADEMAS el resultado exacto?
-                    if (userLocalBet == realLocalResult && userVisitBet == realVisitResult) {
-                        points += 5;
-                    }
-                }
-
-                // acerto a que ganaba el visitante?
-                if (userVisitWinPrediction && realVisitWin) {
-                    points += 1;
-
-                    // acerto a que ganaba la visita Y ADEMAS el resultado exacto?
-                    if (userVisitBet == realVisitResult && userLocalBet == realLocalResult) {
-                        points += 5;
-                    }
-                }
-
-                // acerto al empate?
-                if (userVisitBet == realLocalResult && realVisitResult == realLocalResult) {
-                    points += 5;
-                }
-
-                // 4. Actualizamos los puntos totales del usuario
-                points = points + user.getPoints();
-                user.setPoints(points);
-                userDao.update(user);
+            int adminConfirmation = JOptionPane.showConfirmDialog(
+                    this, 
+                    "Deseas configurar los goles manualmente?", 
+                    "Confirmacion de finalizacion", 
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+            
+            if(adminConfirmation == 1){
+                setMatchAutomaticallyGoals(eventSelected);
             }
-            System.out.println("PanelAdm: ==== Fin del for ===");
-            setEventsIntoEventListModel();
-
-            JOptionPane.showMessageDialog(rootPane, "Evento actualizado correctamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
-            return;
+            
+            if(adminConfirmation == 0){
+                ResultMatchWindow resultMatchWindow = new ResultMatchWindow(eventSelected, this);
+                resultMatchWindow.setVisible(true);
+            }
+            
+            
         }
 
 
