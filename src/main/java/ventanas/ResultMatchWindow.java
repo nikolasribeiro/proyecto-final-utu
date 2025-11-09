@@ -6,6 +6,7 @@ package ventanas;
 
 import com.mycompany.proyectofinalprogramacion.encuentro.Encuentro;
 import com.mycompany.proyectofinalprogramacion.encuentro.EncuentroDAO;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -23,7 +24,23 @@ public class ResultMatchWindow extends javax.swing.JFrame {
         this.encuentro = encuentro;
         this.panelAdmin = panelAdmin;
         setEventValuesIntoFields();
+        disableNormalWindowBehaviorOnClose();
     }
+    
+    private void disableNormalWindowBehaviorOnClose() {
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                closeWindow();
+            }
+        });
+    }
+
+    private void closeWindow() {
+        this.dispose();
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
