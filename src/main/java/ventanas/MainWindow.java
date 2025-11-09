@@ -27,16 +27,17 @@ public class MainWindow extends javax.swing.JFrame {
     private EncuentroDAO encuentroDao = new EncuentroDAO();
     private UserDAO userDao = new UserDAO();
     private PronosticoDetalladoDAO pronosticoDetalladoDao = new PronosticoDetalladoDAO();
+    private PronosticaDAO pronosticaDao = new PronosticaDAO();
+
     private User userLoggedIn;
 
     public MainWindow(User userLoggedIn) {
         initComponents();
-        _initialState();
         this.userLoggedIn = userLoggedIn;
-
+        _initialState();
         refreshRankingList();
         refreshBetsList();
-        
+
         lblPoints.setText("Puntos: " + String.valueOf(userLoggedIn.getPoints()));
 
         eventList.addListSelectionListener(new ListSelectionListener() {
@@ -60,9 +61,8 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     private void _eventListValueChanged(ListSelectionEvent evt) {
-        eventPanel.setVisible(true);
-        localFieldGoals.setText("");
-        visitFieldGoals.setText("");
+        localFieldGoals.setValue(0);
+        visitFieldGoals.setValue(0);
         List<Encuentro> encuentroList = obtenerEncuentros();
 
         int encuentroSelectedIndex = eventList.getSelectedIndex();
@@ -71,6 +71,7 @@ public class MainWindow extends javax.swing.JFrame {
             return;
         }
 
+        eventPanel.setVisible(true);
         System.out.println("Indice seleccionado: " + encuentroSelectedIndex);
         Encuentro encuentroSelected = encuentroList.get(encuentroSelectedIndex);
 
@@ -87,11 +88,22 @@ public class MainWindow extends javax.swing.JFrame {
 
         System.out.println("Filtrado de lista terminado");
         for (int i = 0; i < encuentroList.size(); i++) {
-            System.out.println("Iniciando loop de eventos ya filtrados");
-            String element = (i + 1) + ") " + "Local: " + encuentroList.get(i).getNombreLocal() + " - Visitante: " + encuentroList.get(i).getNombreVisita();
-            System.out.println("Seteo de eventos");
-            eventListModel.addElement(element);
-            System.out.println("Elemento añadido correctamente...");
+            Encuentro encuentro = encuentroList.get(i);
+            Pronostica pronosticoExistente = pronosticaDao.getByLoginAndIdEncuentro(
+                    userLoggedIn.getLogin(),
+                    encuentro.getIdEncuentro()
+            );
+            
+            if (pronosticoExistente == null) {
+                // Si el usuario aun NO ha realizado ningun pronostico para el encuentro
+                // iterado, entonces debemos mostrar ese encuentro para pronosticar
+                System.out.println("Iniciando loop de eventos ya filtrados");
+                String element = (i + 1) + ") " + "Local: " + encuentroList.get(i).getNombreLocal() + " - Visitante: " + encuentroList.get(i).getNombreVisita();
+                System.out.println("Seteo de eventos");
+                eventListModel.addElement(element);
+                System.out.println("Elemento añadido correctamente...");
+            }
+
         }
     }
 
@@ -161,13 +173,13 @@ public class MainWindow extends javax.swing.JFrame {
         lblPoints = new javax.swing.JLabel();
         eventPanel = new javax.swing.JPanel();
         eventTitle = new javax.swing.JLabel();
-        localFieldGoals = new javax.swing.JTextField();
-        visitFieldGoals = new javax.swing.JTextField();
         localTeamName = new javax.swing.JLabel();
         visitTeamName = new javax.swing.JLabel();
         addBet = new javax.swing.JButton();
         lblVersus = new javax.swing.JLabel();
         eventIdFromLabel = new javax.swing.JLabel();
+        localFieldGoals = new javax.swing.JSpinner();
+        visitFieldGoals = new javax.swing.JSpinner();
         jLabel3 = new javax.swing.JLabel();
         profileBtn = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
@@ -202,24 +214,18 @@ public class MainWindow extends javax.swing.JFrame {
 
         jLabel2.setBackground(new java.awt.Color(0, 0, 0));
         jLabel2.setOpaque(true);
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 1020, 10));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 1040, 10));
 
         lblPoints.setFont(new java.awt.Font("Segoe UI", 2, 18)); // NOI18N
         lblPoints.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblPoints.setText("Puntos: 0");
-        getContentPane().add(lblPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(893, 6, 120, 42));
+        getContentPane().add(lblPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 10, 120, 42));
 
         eventPanel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         eventPanel.setMinimumSize(new java.awt.Dimension(374, 175));
 
         eventTitle.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         eventTitle.setText("Encuentro 1");
-
-        localFieldGoals.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                localFieldGoalsActionPerformed(evt);
-            }
-        });
 
         localTeamName.setText("Barcelona");
 
@@ -238,6 +244,10 @@ public class MainWindow extends javax.swing.JFrame {
 
         eventIdFromLabel.setText("jLabel4");
 
+        localFieldGoals.setModel(new javax.swing.SpinnerNumberModel(0, 0, 999, 1));
+
+        visitFieldGoals.setModel(new javax.swing.SpinnerNumberModel(0, 0, 999, 1));
+
         javax.swing.GroupLayout eventPanelLayout = new javax.swing.GroupLayout(eventPanel);
         eventPanel.setLayout(eventPanelLayout);
         eventPanelLayout.setHorizontalGroup(
@@ -248,14 +258,15 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(addBet, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(eventPanelLayout.createSequentialGroup()
                         .addGroup(eventPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(localFieldGoals, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(localTeamName))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblVersus)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(localTeamName)
+                            .addGroup(eventPanelLayout.createSequentialGroup()
+                                .addComponent(localFieldGoals, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                                .addComponent(lblVersus)))
+                        .addGap(12, 12, 12)
                         .addGroup(eventPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(visitFieldGoals, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(visitTeamName)))
+                            .addComponent(visitTeamName)
+                            .addComponent(visitFieldGoals, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(eventPanelLayout.createSequentialGroup()
                         .addComponent(eventTitle)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -275,19 +286,19 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(visitTeamName))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(eventPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblVersus)
                     .addComponent(localFieldGoals, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(visitFieldGoals, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblVersus))
-                .addGap(18, 18, 18)
-                .addComponent(addBet, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
+                    .addComponent(visitFieldGoals, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(50, 50, 50)
+                .addComponent(addBet, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        getContentPane().add(eventPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(401, 6, -1, 210));
+        getContentPane().add(eventPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(391, 6, 400, 210));
 
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
         jLabel3.setOpaque(true);
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(787, 6, 10, 220));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 10, 10, 220));
 
         profileBtn.setText("Perfil");
         profileBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -295,11 +306,11 @@ public class MainWindow extends javax.swing.JFrame {
                 profileBtnActionPerformed(evt);
             }
         });
-        getContentPane().add(profileBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 150, 223, 60));
+        getContentPane().add(profileBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 150, 230, 60));
 
         jLabel4.setBackground(new java.awt.Color(0, 0, 0));
         jLabel4.setOpaque(true);
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 220, 10, 350));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 220, 10, 350));
 
         jLabel5.setBackground(new java.awt.Color(0, 0, 0));
         jLabel5.setOpaque(true);
@@ -307,7 +318,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 2, 24)); // NOI18N
         jLabel6.setText("Ranking total");
-        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 230, -1, -1));
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 230, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 2, 24)); // NOI18N
         jLabel7.setText("Pronosticos Realizados");
@@ -321,7 +332,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(rankingList);
 
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 270, 470, 310));
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 270, 470, 310));
 
         betsRealizedList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -338,7 +349,7 @@ public class MainWindow extends javax.swing.JFrame {
                 btncerrarActionPerformed(evt);
             }
         });
-        getContentPane().add(btncerrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 20, -1, -1));
+        getContentPane().add(btncerrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 20, -1, -1));
 
         refreshMatchBets.setText("Refrescar lista de Partidos");
         refreshMatchBets.addActionListener(new java.awt.event.ActionListener() {
@@ -354,42 +365,24 @@ public class MainWindow extends javax.swing.JFrame {
                 refreshListsBtnActionPerformed(evt);
             }
         });
-        getContentPane().add(refreshListsBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 580, 1010, 40));
+        getContentPane().add(refreshListsBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 580, 1040, 40));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void localFieldGoalsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_localFieldGoalsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_localFieldGoalsActionPerformed
-
     private void addBetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBetActionPerformed
         String userLogin = userLoggedIn.getLogin();
-        String localInputValue = localFieldGoals.getText();
-        String visitInputValue = visitFieldGoals.getText();
+        int localInputValue = (int) localFieldGoals.getValue();
+        int visitInputValue = (int) visitFieldGoals.getValue();
         String eventId = eventIdFromLabel.getText();
 
-        boolean fieldsAreInvalid
-                = localInputValue.isBlank()
-                || localInputValue.isEmpty()
-                || visitInputValue.isBlank()
-                || visitInputValue.isEmpty();
-
-        if (fieldsAreInvalid) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "La prediccion para el local y el visitante son obligatorias.",
-                    "Campos obligatorios",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        Pronostica pronostico = new Pronostica(userLogin, Integer.parseInt(eventId), Integer.parseInt(localInputValue), Integer.parseInt(visitInputValue));
+        Pronostica pronostico = new Pronostica(userLogin, Integer.parseInt(eventId), localInputValue, visitInputValue);
         PronosticaDAO pronosticaDao = new PronosticaDAO();
         pronosticaDao.create(pronostico);
         eventPanel.setVisible(false);
 
         refreshBetsList();
+        refreshMatchList();
         JOptionPane.showMessageDialog(eventPanel, "Pronostico añadido correctamente!");
     }//GEN-LAST:event_addBetActionPerformed
 
@@ -421,6 +414,8 @@ public class MainWindow extends javax.swing.JFrame {
     private void refreshListsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshListsBtnActionPerformed
         refreshBetsList();
         refreshRankingList();
+        refreshMatchList();
+        eventPanel.setVisible(false);
         User userLoggedIn = userDao.get(this.userLoggedIn.getLogin());
         this.userLoggedIn = userLoggedIn;
         lblPoints.setText("Puntos: " + String.valueOf(this.userLoggedIn.getPoints()));
@@ -447,13 +442,13 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lblPoints;
     private javax.swing.JLabel lblVersus;
-    private javax.swing.JTextField localFieldGoals;
+    private javax.swing.JSpinner localFieldGoals;
     private javax.swing.JLabel localTeamName;
     private javax.swing.JButton profileBtn;
     private javax.swing.JList<String> rankingList;
     private javax.swing.JButton refreshListsBtn;
     private javax.swing.JButton refreshMatchBets;
-    private javax.swing.JTextField visitFieldGoals;
+    private javax.swing.JSpinner visitFieldGoals;
     private javax.swing.JLabel visitTeamName;
     // End of variables declaration//GEN-END:variables
 }

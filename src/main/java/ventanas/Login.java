@@ -128,18 +128,17 @@ public class Login extends javax.swing.JFrame {
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         String nameInputValue = userName.getText();
         String passwordInputValue = userPassword.getText();
-        
-        if(nameInputValue.isBlank() || nameInputValue.isEmpty()){
+
+        if (nameInputValue.isBlank() || nameInputValue.isEmpty()) {
             JOptionPane.showMessageDialog(this, "el campo login es obligatorio", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        if(passwordInputValue.isBlank() || passwordInputValue.isEmpty()){
+
+        if (passwordInputValue.isBlank() || passwordInputValue.isEmpty()) {
             JOptionPane.showMessageDialog(this, "la contraseña es obligatoria", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        
+
         UserDAO userDao = new UserDAO();
         User user = userDao.get(nameInputValue);
 
@@ -156,9 +155,9 @@ public class Login extends javax.swing.JFrame {
                 y que la contraseña ingresada es igual a la que tenemos guardada
                 Ahora cotejamos que no este baneado
              */
-            
+
             Estado currentStatus = user.getState();
-               
+
             if (currentStatus.equals(Estado.banneado)) {
                 JOptionPane.showMessageDialog(this, "Estas baneado :(", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -177,6 +176,13 @@ public class Login extends javax.swing.JFrame {
             }
 
             this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Usuario o contraseña invalidos",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 

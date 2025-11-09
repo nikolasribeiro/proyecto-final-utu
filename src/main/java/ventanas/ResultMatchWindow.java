@@ -53,11 +53,11 @@ public class ResultMatchWindow extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         title = new javax.swing.JLabel();
         localTeamName = new javax.swing.JLabel();
-        localTeamGoals = new javax.swing.JTextField();
-        visitTeamGoals = new javax.swing.JTextField();
         visitTeamName = new javax.swing.JLabel();
         saveResultBtn = new javax.swing.JButton();
         cancelResultBtn = new javax.swing.JButton();
+        localTeamGoals = new javax.swing.JSpinner();
+        visitTeamGoals = new javax.swing.JSpinner();
 
         jButton1.setText("jButton1");
 
@@ -81,6 +81,10 @@ public class ResultMatchWindow extends javax.swing.JFrame {
 
         cancelResultBtn.setText("Cancelar");
 
+        localTeamGoals.setModel(new javax.swing.SpinnerNumberModel(0, 0, 999, 1));
+
+        visitTeamGoals.setModel(new javax.swing.SpinnerNumberModel(0, 0, 999, 1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -92,7 +96,7 @@ public class ResultMatchWindow extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(localTeamName)
                             .addComponent(localTeamGoals, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(visitTeamName, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(visitTeamGoals, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -107,18 +111,16 @@ public class ResultMatchWindow extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(visitTeamName)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(visitTeamGoals, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(title)
-                        .addGap(32, 32, 32)
-                        .addComponent(localTeamName)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(localTeamGoals, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(title)
                 .addGap(32, 32, 32)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(localTeamName)
+                    .addComponent(visitTeamName))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(localTeamGoals, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(visitTeamGoals, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(saveResultBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cancelResultBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -135,25 +137,10 @@ public class ResultMatchWindow extends javax.swing.JFrame {
 
 
     private void saveResultBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveResultBtnActionPerformed
-        String localGoals = localTeamGoals.getText();
-        String visitGoals = visitTeamGoals.getText();
-        boolean fieldsAreInvalid
-                = localGoals.isBlank()
-                || localGoals.isEmpty()
-                || visitGoals.isBlank()
-                || visitGoals.isEmpty();
+        int localGoals = (int) localTeamGoals.getValue();
+        int visitGoals = (int) visitTeamGoals.getValue();
 
-        if (fieldsAreInvalid) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Los campos no pueden estar vacios",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-            );
-            return;
-        }
-
-        this.panelAdmin.setMatchManuallyGoals(encuentro, Integer.parseInt(localGoals), Integer.parseInt(visitGoals));
+        this.panelAdmin.setMatchManuallyGoals(encuentro, localGoals, visitGoals);
         JOptionPane.showMessageDialog(this, "Goles configurados correctamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
         this.dispose();
     }//GEN-LAST:event_saveResultBtnActionPerformed
@@ -162,11 +149,11 @@ public class ResultMatchWindow extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelResultBtn;
     private javax.swing.JButton jButton1;
-    private javax.swing.JTextField localTeamGoals;
+    private javax.swing.JSpinner localTeamGoals;
     private javax.swing.JLabel localTeamName;
     private javax.swing.JButton saveResultBtn;
     private javax.swing.JLabel title;
-    private javax.swing.JTextField visitTeamGoals;
+    private javax.swing.JSpinner visitTeamGoals;
     private javax.swing.JLabel visitTeamName;
     // End of variables declaration//GEN-END:variables
 }

@@ -23,9 +23,7 @@ public class PronosticaDAO {
         String sql = "SELECT login, idEncuentro, resultadoLocal, resultadoVisita FROM pronostica"; // Seleccionamos todas las columnas
 
         // Usamos try-with-resources para asegurar el cierre automático
-        try (Connection conn = DBConnector.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = DBConnector.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Pronostica p = new Pronostica();
@@ -40,36 +38,60 @@ public class PronosticaDAO {
         }
         return pronosticos;
     }
-    public void create(Pronostica pronostico){
+
+    public void create(Pronostica pronostico) {
         String query = "INSERT INTO pronostica(login, idEncuentro, resultadoLocal, resultadoVisita) VALUES (?,?,?,?)";
-        try{
+        try {
             Connection conn = DBConnector.getConnection();
             PreparedStatement statement = conn.prepareStatement(query);
-            
-            statement.setString(1, pronostico.getLogin());            
+
+            statement.setString(1, pronostico.getLogin());
             statement.setInt(2, pronostico.getIdEncuentro());
             statement.setInt(3, pronostico.getResultadoLocal());
             statement.setInt(4, pronostico.getResultadoVisita());
-            
+
             statement.executeUpdate();
-            System.out.println("Usuario '"+pronostico.getLogin()+"' pronostico " + pronostico.getResultadoLocal()  + " a " + pronostico.getResultadoVisita() + " en encuentro N°" + pronostico.getIdEncuentro());
-            
-        }catch(SQLException error){
+            System.out.println("Usuario '" + pronostico.getLogin() + "' pronostico " + pronostico.getResultadoLocal() + " a " + pronostico.getResultadoVisita() + " en encuentro N°" + pronostico.getIdEncuentro());
+
+        } catch (SQLException error) {
             System.out.println("Ocurrio un error al cargar el pronostico: " + error.getMessage());
         }
     }
-    
+
+    public Pronostica getByLoginAndIdEncuentro(String login, int idEncuentro) {
+        String sql = "SELECT login, idEncuentro, resultadoLocal, resultadoVisita FROM pronostica WHERE login = ? AND idEncuentro = ?"; // Seleccionamos todas las columnas
+        Pronostica p = null;
+        // Usamos try-with-resources para asegurar el cierre automático
+        try {
+            Connection conn = DBConnector.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, login);
+            ps.setInt(2, idEncuentro);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                p = new Pronostica();
+                p.setLogin(rs.getString("login"));
+                p.setIdEncuentro(rs.getInt("idEncuentro"));
+                p.setResultadoLocal(rs.getInt("resultadoLocal"));
+                p.setResultadoVisita(rs.getInt("resultadoVisita"));
+            }
+        } catch (SQLException ex) {
+            System.out.println(" Error al listar los pronósticos: " + ex.getMessage());
+        }
+        return p;
+    }
+
     public void delete(int idEncuentro) {
         String query = "DELETE FROM pronostica WHERE idEncuentro = ?;";
-        try{
+        try {
             Connection conn = DBConnector.getConnection();
             PreparedStatement statement = conn.prepareStatement(query);
-            
+
             statement.setInt(1, idEncuentro);
             statement.executeUpdate();
-            System.out.println("Encuentro '"+ idEncuentro + "' Eliminado correctamente.");
-            
-        }catch(SQLException error){
+            System.out.println("Encuentro '" + idEncuentro + "' Eliminado correctamente.");
+
+        } catch (SQLException error) {
             System.out.println("Ocurrio un error al cargar el pronostico: " + error.getMessage());
         }
     }
