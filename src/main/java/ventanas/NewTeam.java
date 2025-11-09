@@ -70,6 +70,7 @@ public class NewTeam extends javax.swing.JFrame {
         teamBtnAction = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         title.setText("Añadir Nuevo Equipo");
