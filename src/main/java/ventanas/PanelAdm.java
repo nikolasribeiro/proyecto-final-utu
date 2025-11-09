@@ -124,10 +124,18 @@ public class PanelAdm extends javax.swing.JFrame {
 
         startEventBtn.setEnabled(false);
         deleteEventBtn.setEnabled(false);
+        editTeamBtn.setEnabled(false);
+        deleteTeamBtn.setEnabled(false);
 
         eventList.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent evt) {
                 _eventListValueChanged(evt);
+            }
+        });
+        
+        teamList.addListSelectionListener(new ListSelectionListener(){
+            public void valueChanged(ListSelectionEvent evt){
+                _teamListValueChanged();
             }
         });
     }
@@ -456,12 +464,12 @@ public class PanelAdm extends javax.swing.JFrame {
         if (eventSelectedIndex == -1) {
             return;
         }
-
+        
         EncuentroDAO encuentroDao = new EncuentroDAO();
         List<Encuentro> events = encuentroDao.listar();
         Encuentro eventSelected = events.get(eventSelectedIndex);
         startEventBtn.setEnabled(true);
-
+        
         if (eventSelected.getEstado().equals("habilitado")) {
             startEventBtn.setText("Comenzar Evento");
             startEventBtn.setBackground(Color.GREEN);
@@ -484,7 +492,13 @@ public class PanelAdm extends javax.swing.JFrame {
 
     }
 
-
+    private void _teamListValueChanged(){
+        editTeamBtn.setEnabled(true);
+        deleteTeamBtn.setEnabled(true);
+    }
+    
+    
+    
     private void btnAdminExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdminExitActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnAdminExitActionPerformed
