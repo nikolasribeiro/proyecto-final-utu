@@ -128,7 +128,18 @@ public class Login extends javax.swing.JFrame {
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         String nameInputValue = userName.getText();
         String passwordInputValue = userPassword.getText();
-
+        
+        if(nameInputValue.isBlank() || nameInputValue.isEmpty()){
+            JOptionPane.showMessageDialog(this, "el campo login es obligatorio", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if(passwordInputValue.isBlank() || passwordInputValue.isEmpty()){
+            JOptionPane.showMessageDialog(this, "la contraseña es obligatoria", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        
         UserDAO userDao = new UserDAO();
         User user = userDao.get(nameInputValue);
 

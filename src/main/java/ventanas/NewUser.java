@@ -5,6 +5,7 @@
 package ventanas;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import usuarios.Estado;
 import usuarios.Genero;
@@ -28,11 +29,13 @@ public class NewUser extends javax.swing.JFrame {
     public NewUser() {
         initComponents();
         setComboboxes();
+        disableNormalWindowBehaviorOnClose();
     }
 
     public NewUser(User user) {
         initComponents();
         setComboboxes();
+        disableNormalWindowBehaviorOnClose();
         this.userLoggedIn = user;
 
         roleTxt.setVisible(false);
@@ -44,18 +47,36 @@ public class NewUser extends javax.swing.JFrame {
     public NewUser(PanelAdm panelPadre) {
         initComponents();
         setComboboxes();
+        disableNormalWindowBehaviorOnClose();
         this.panelAdminPadre = panelPadre;
     }
 
     public NewUser(PanelAdm panelPadre, User userSelected) {
         initComponents();
         setComboboxes();
+        disableNormalWindowBehaviorOnClose();
         this.panelAdminPadre = panelPadre;
         this.userSelected = userSelected;
 
         loadUserDataIntoForm();
     }
+    
+        private void disableNormalWindowBehaviorOnClose() {
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                closeWindow();
+            }
+        });
+    }
+    
+    private void closeWindow(){
+        this.dispose();
+    }
 
+    
+    
     private void setComboboxes() {
         DefaultComboBoxModel genderComboBoxModel = new DefaultComboBoxModel<>(Genero.values());
         DefaultComboBoxModel stateComboBoxModel = new DefaultComboBoxModel<>(Estado.values());
@@ -233,9 +254,30 @@ public class NewUser extends javax.swing.JFrame {
         String password = passwordTxt.getText();
         String name = nameTxt.getText();
         String email = emailTxt.getText();
+
+        boolean fieldsAreInvalid
+                = login.isBlank()
+                || login.isEmpty()
+                || password.isBlank() 
+                || password.isEmpty()
+                || name.isBlank()
+                || name.isEmpty()
+                || email.isBlank()
+                || email.isEmpty();
+        
+        if(fieldsAreInvalid){
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Todos los campos son obligatorios.",
+                    "Campos obligatorios",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        
+        
         UserDAO userDao = new UserDAO();
-        
-        
+
         if (this.userLoggedIn != null) {
             Genero gender = (Genero) genderTxt.getSelectedItem();
             Estado state = Estado.activo;
@@ -265,7 +307,6 @@ public class NewUser extends javax.swing.JFrame {
         Rol role = (Rol) roleTxt.getSelectedItem();
 
         User newUser = new User();
-        
 
         newUser.setLogin(login);
         newUser.setEmail(email);

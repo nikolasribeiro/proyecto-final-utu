@@ -29,16 +29,14 @@ public class MainWindow extends javax.swing.JFrame {
     private PronosticoDetalladoDAO pronosticoDetalladoDao = new PronosticoDetalladoDAO();
     private User userLoggedIn;
 
-
     public MainWindow(User userLoggedIn) {
         initComponents();
         _initialState();
         this.userLoggedIn = userLoggedIn;
-        
-        
+
         refreshRankingList();
         refreshBetsList();
-        
+
         lblPoints.setText("Puntos: " + String.valueOf(userLoggedIn.getPoints()));
 
         eventList.addListSelectionListener(new ListSelectionListener() {
@@ -47,8 +45,8 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
     }
-    
-    private List<Encuentro> obtenerEncuentros(){
+
+    private List<Encuentro> obtenerEncuentros() {
         List<Encuentro> tempEventList = encuentroDao.listar();
         List<Encuentro> encuentroList = new ArrayList<Encuentro>();
 
@@ -57,23 +55,22 @@ public class MainWindow extends javax.swing.JFrame {
                 encuentroList.add(tempEvent);
             }
         }
-        
+
         return encuentroList;
     }
-    
+
     private void _eventListValueChanged(ListSelectionEvent evt) {
         eventPanel.setVisible(true);
         localFieldGoals.setText("");
         visitFieldGoals.setText("");
         List<Encuentro> encuentroList = obtenerEncuentros();
-        
+
         int encuentroSelectedIndex = eventList.getSelectedIndex();
-        
-        if(encuentroSelectedIndex < 0){
+
+        if (encuentroSelectedIndex < 0) {
             return;
         }
-        
-        
+
         System.out.println("Indice seleccionado: " + encuentroSelectedIndex);
         Encuentro encuentroSelected = encuentroList.get(encuentroSelectedIndex);
 
@@ -82,12 +79,12 @@ public class MainWindow extends javax.swing.JFrame {
         visitTeamName.setText(encuentroSelected.getNombreVisita());
         eventIdFromLabel.setText(Integer.toString(encuentroSelected.getIdEncuentro()));
     }
-    
+
     public void refreshMatchList() {
         System.out.println("Estamos dentro de refreschMatchList");
         eventListModel.clear();
         List<Encuentro> encuentroList = obtenerEncuentros();
-        
+
         System.out.println("Filtrado de lista terminado");
         for (int i = 0; i < encuentroList.size(); i++) {
             System.out.println("Iniciando loop de eventos ya filtrados");
@@ -97,20 +94,20 @@ public class MainWindow extends javax.swing.JFrame {
             System.out.println("Elemento añadido correctamente...");
         }
     }
-    
-    public void refreshRankingList(){
+
+    public void refreshRankingList() {
         rankingListModel.clear();
         List<String> rankings = userDao.getRankingSorted();
-        
-        for(String ranking: rankings){
+
+        for (String ranking : rankings) {
             rankingListModel.addElement(ranking);
         }
     }
-    
-    public void refreshBetsList (){
+
+    public void refreshBetsList() {
         betsListModel.clear();
         List<PronosticaDetallado> pronosticos = pronosticoDetalladoDao.listarTotalDePronosticosConDatosAdicionalesPorUsuario(userLoggedIn);
-        
+
         for (PronosticaDetallado pronostico : pronosticos) {
             String element
                     = "Partido: "
@@ -138,7 +135,7 @@ public class MainWindow extends javax.swing.JFrame {
             betsListModel.addElement(element);
         }
     }
-    
+
     public void _initialState() {
         eventPanel.setVisible(false);
         eventIdFromLabel.setVisible(false);
@@ -371,6 +368,21 @@ public class MainWindow extends javax.swing.JFrame {
         String localInputValue = localFieldGoals.getText();
         String visitInputValue = visitFieldGoals.getText();
         String eventId = eventIdFromLabel.getText();
+
+        boolean fieldsAreInvalid
+                = localInputValue.isBlank()
+                || localInputValue.isEmpty()
+                || visitInputValue.isBlank()
+                || visitInputValue.isEmpty();
+
+        if (fieldsAreInvalid) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "La prediccion para el local y el visitante son obligatorias.",
+                    "Campos obligatorios",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         Pronostica pronostico = new Pronostica(userLogin, Integer.parseInt(eventId), Integer.parseInt(localInputValue), Integer.parseInt(visitInputValue));
         PronosticaDAO pronosticaDao = new PronosticaDAO();

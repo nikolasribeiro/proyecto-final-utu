@@ -6,6 +6,7 @@ package ventanas;
 
 import equipos.EquiposDAO;
 import equipos.Equipo;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -22,11 +23,13 @@ public class NewTeam extends javax.swing.JFrame {
      */
     public NewTeam() {
         initComponents();
+        disableNormalWindowBehaviorOnClose();
     }
     
     public NewTeam(PanelAdm adminPanel) {
         initComponents();
         this.adminPanel = adminPanel;
+        disableNormalWindowBehaviorOnClose();
     }
     
     public NewTeam(Equipo teamSelected, PanelAdm adminPanel) {
@@ -34,8 +37,22 @@ public class NewTeam extends javax.swing.JFrame {
         this.teamSelected = teamSelected;
         this.adminPanel = adminPanel;
         setEdittedValues();
+        disableNormalWindowBehaviorOnClose();
     }
     
+    private void disableNormalWindowBehaviorOnClose() {
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                closeWindow();
+            }
+        });
+    }
+    
+    private void closeWindow(){
+        this.dispose();
+    }
     
     private void setEdittedValues () {
         teamNameTxt.setText(this.teamSelected.getNombre());
@@ -125,6 +142,17 @@ public class NewTeam extends javax.swing.JFrame {
 
     private void teamBtnActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_teamBtnActionActionPerformed
         String teamName = teamNameTxt.getText();
+        
+        if(teamName.isBlank() || teamName.isEmpty()){
+            JOptionPane.showMessageDialog(
+                    this,
+                    "El nombre del equipo es obligatorio.",
+                    "Campos obligatorios",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        
         EquiposDAO equipoDao = new EquiposDAO();
         Equipo newTeam = new Equipo(teamName);
         
