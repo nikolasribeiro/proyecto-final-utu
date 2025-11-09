@@ -36,7 +36,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         refreshRankingList();
         refreshBetsList();
-
+        
         lblPoints.setText("Puntos: " + String.valueOf(userLoggedIn.getPoints()));
 
         eventList.addListSelectionListener(new ListSelectionListener() {
@@ -421,6 +421,9 @@ public class MainWindow extends javax.swing.JFrame {
     private void refreshListsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshListsBtnActionPerformed
         refreshBetsList();
         refreshRankingList();
+        User userLoggedIn = userDao.get(this.userLoggedIn.getLogin());
+        this.userLoggedIn = userLoggedIn;
+        lblPoints.setText("Puntos: " + String.valueOf(this.userLoggedIn.getPoints()));
     }//GEN-LAST:event_refreshListsBtnActionPerformed
 
 

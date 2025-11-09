@@ -14,19 +14,19 @@ import javax.swing.JOptionPane;
  * @author Usuario
  */
 public class ResultMatchWindow extends javax.swing.JFrame {
-    
+
     private Encuentro encuentro;
     private EncuentroDAO encuentroDao = new EncuentroDAO();
     private PanelAdm panelAdmin;
-    
-    public ResultMatchWindow(Encuentro encuentro, PanelAdm panelAdmin){
+
+    public ResultMatchWindow(Encuentro encuentro, PanelAdm panelAdmin) {
         initComponents();
         this.encuentro = encuentro;
         this.panelAdmin = panelAdmin;
         setEventValuesIntoFields();
         disableNormalWindowBehaviorOnClose();
     }
-    
+
     private void disableNormalWindowBehaviorOnClose() {
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -40,8 +40,7 @@ public class ResultMatchWindow extends javax.swing.JFrame {
     private void closeWindow() {
         this.dispose();
     }
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -128,18 +127,32 @@ public class ResultMatchWindow extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
-    private void setEventValuesIntoFields () {
+
+    private void setEventValuesIntoFields() {
         localTeamName.setText(this.encuentro.getNombreLocal());
         visitTeamName.setText(this.encuentro.getNombreVisita());
     }
-    
-    
-    
+
+
     private void saveResultBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveResultBtnActionPerformed
         String localGoals = localTeamGoals.getText();
         String visitGoals = visitTeamGoals.getText();
-        
+        boolean fieldsAreInvalid
+                = localGoals.isBlank()
+                || localGoals.isEmpty()
+                || visitGoals.isBlank()
+                || visitGoals.isEmpty();
+
+        if (fieldsAreInvalid) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Los campos no pueden estar vacios",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
         this.panelAdmin.setMatchManuallyGoals(encuentro, Integer.parseInt(localGoals), Integer.parseInt(visitGoals));
         JOptionPane.showMessageDialog(this, "Goles configurados correctamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
         this.dispose();
