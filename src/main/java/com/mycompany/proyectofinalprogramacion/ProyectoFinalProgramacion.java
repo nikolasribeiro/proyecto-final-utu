@@ -1,84 +1,88 @@
 package com.mycompany.proyectofinalprogramacion;
 
-import com.mycompany.proyectofinalprogramacion.encuentro.Encuentro;
-import com.mycompany.proyectofinalprogramacion.encuentro.EncuentroDAO;
-import java.util.List;
-import usuarios.Estado;
-import usuarios.Genero;
-import usuarios.User;
-import usuarios.UserDAO;
+class Moto {
+    private int totalCombustible = 100;
 
-/**
- *
- * @author Nicolas Ribeiro
- */
+    Moto() {
+        System.out.println("Se instancio la clase Moto");
+    }
+
+    public void prender() {
+        if (totalCombustible <= 0) {
+            System.out.println("No prende, no tenes combustible");
+            return;
+        }
+
+        System.out.println("Se prendio la moto");
+    }
+
+    public void acelerar() {
+        if (totalCombustible == 0) {
+            apagar();
+            return;
+        }
+
+        System.out.println("Se esta acelerando la moto");
+        totalCombustible = totalCombustible - 10;
+    }
+    
+    public void medidorDeCombustible() {
+        System.out.println("Tenes en el tanque, lo siguiente: " + totalCombustible);
+    }
+
+    public void apagar() {
+        System.out.println("La moto se apago.");
+    }
+
+    public void cargarCombustible(int litrosACargar) {
+        if (this.totalCombustible >= 100) {
+            System.out.println("El tanque esta lleno");
+            return;
+        }
+        this.totalCombustible = this.totalCombustible + litrosACargar;
+    }
+}
+
 public class ProyectoFinalProgramacion {
 
     public static void main(String[] args) {
+     // tipo   instancia          = clase();
+        Moto   nicoYaEstaEnLaMoto = new Moto();
         
-        /*
-        //Este objeto vive en memoria
-        User user1 = new User(); 
-        User user2 = new User();
-        
-        EncuentroDAO encuentroDao = new EncuentroDAO();
-        
-        List<Encuentro> encuentroList = encuentroDao.listar();
-        
-        System.out.println("Elemento en el indice 0: " + encuentroList.get(0));
-        
-        // Este objeto es el intermediario entre 
-        //el objeto en memoria y la base de datos.
-        UserDAO userDao = new UserDAO(); 
-        
-        user1.setLogin("test");
-        user1.setName("Test User");
-        user1.setPassword("1234");
-        user1.setGender(Genero.masculino);
-        user1.setState(Estado.activo);
-        user1.setEmail("email@email.com");
-        user1.setPoints(10_000);
+        nicoYaEstaEnLaMoto.prender();
+        nicoYaEstaEnLaMoto.acelerar();
+        nicoYaEstaEnLaMoto.medidorDeCombustible();
+        nicoYaEstaEnLaMoto.acelerar();
+        nicoYaEstaEnLaMoto.acelerar();
+        nicoYaEstaEnLaMoto.acelerar();
+        nicoYaEstaEnLaMoto.acelerar();
+        nicoYaEstaEnLaMoto.acelerar();
+        nicoYaEstaEnLaMoto.acelerar();
+        nicoYaEstaEnLaMoto.acelerar();
+        nicoYaEstaEnLaMoto.medidorDeCombustible();
+        nicoYaEstaEnLaMoto.cargarCombustible(30);
+        nicoYaEstaEnLaMoto.medidorDeCombustible();
+        nicoYaEstaEnLaMoto.cargarCombustible(30);
+        nicoYaEstaEnLaMoto.medidorDeCombustible();
+        nicoYaEstaEnLaMoto.cargarCombustible(30);
+        nicoYaEstaEnLaMoto.cargarCombustible(30);
+        nicoYaEstaEnLaMoto.cargarCombustible(30);
+        nicoYaEstaEnLaMoto.cargarCombustible(30);
+        nicoYaEstaEnLaMoto.cargarCombustible(30);
+        nicoYaEstaEnLaMoto.cargarCombustible(30);
+        nicoYaEstaEnLaMoto.cargarCombustible(30);
+        nicoYaEstaEnLaMoto.cargarCombustible(30);
+        nicoYaEstaEnLaMoto.cargarCombustible(30);
+        nicoYaEstaEnLaMoto.cargarCombustible(30);
+        nicoYaEstaEnLaMoto.cargarCombustible(30);
+        nicoYaEstaEnLaMoto.cargarCombustible(30);
+        nicoYaEstaEnLaMoto.cargarCombustible(30);
+        nicoYaEstaEnLaMoto.cargarCombustible(30);
+        nicoYaEstaEnLaMoto.cargarCombustible(30);
+        nicoYaEstaEnLaMoto.cargarCombustible(30);
 
-        // Creacion de usuario
-        userDao.create(user1);
-       // System.out.println("Nombre inicial: "+user1.getName());
-        user1.setName("Test User2");
-        //System.out.println("Nombre actualizado: "+user1.getName());
-        userDao.update(user1);
-        
-        // Creacion de usuario 2
-        user2.setLogin("test2");
-        user2.setName("Test User3");
-        user2.setPassword("1234");
-        user2.setGender(Genero.femenino);
-        user2.setState(Estado.activo);
-        user2.setEmail("email@email.com");
-        user2.setPoints(2);
-        
-        //userDao.create(user2);
-        
-        // Traer un dato de la base de datos
-
-        //User user3 = userDao.get("test");
-        //System.out.println("Nombre: " + user3.getName());
-        /*  if(user3.getState().equals("baneado")){
-            System.out.println("Usted cago fuego");
-       // User user3 = userDao.get("test");
-        //System.out.println("Nombre: " + user3.getName());
-        
-        //if(user3.getState().equals("baneado")){
-            //System.out.println("Usted cago fuego");
-            
-        //}else{
-            //System.out.println("Usted puede pasar");
-        //}
-
-        System.out.println("Estado: " + Estado.activo);
-        */
-       
-        // Genero gender =  Genero.desdeBD("ns/nc");
-        
-        // System.out.println(gender);
-        
+        nicoYaEstaEnLaMoto.acelerar();
+        nicoYaEstaEnLaMoto.medidorDeCombustible();
+        nicoYaEstaEnLaMoto.medidorDeCombustible();
     }
 }

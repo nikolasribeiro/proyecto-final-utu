@@ -12,6 +12,7 @@ import java.sql.Time;
 import java.util.Calendar;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFrame;
 
 /**
  *
@@ -23,7 +24,7 @@ public class NewEvent extends javax.swing.JFrame {
     DefaultComboBoxModel visitComboBoxModel = new DefaultComboBoxModel<>();
     private List<Equipo> allTeams;
     private PanelAdm panelAdmin;
-    
+
     /**
      * Creates new form NewEvent
      */
@@ -32,15 +33,33 @@ public class NewEvent extends javax.swing.JFrame {
         setComboboxModelOnInstance();
         settingListenersForComboboxes();
         setupLogicComponents();
+        disableNormalWindowBehaviorOnClose();
+
     }
-    
+
     public NewEvent(PanelAdm panelAdmin) {
         initComponents();
         setComboboxModelOnInstance();
         settingListenersForComboboxes();
         setupLogicComponents();
-        
+        disableNormalWindowBehaviorOnClose();
+
         this.panelAdmin = panelAdmin;
+
+    }
+
+    private void disableNormalWindowBehaviorOnClose() {
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                closeWindow();
+            }
+        });
+    }
+
+    private void closeWindow() {
+        this.dispose();
     }
 
     private void setupLogicComponents() {
@@ -349,14 +368,13 @@ public class NewEvent extends javax.swing.JFrame {
         String eventState = "habilitado";
         Equipo localTeamSelected = (Equipo) localComboBox.getSelectedItem();
         Equipo visitTeamSelected = (Equipo) visitComboBox.getSelectedItem();
-        
+
         System.out.println("Local ID: " + localTeamSelected.getIdEquipo());
         System.out.println("Visit ID: " + visitTeamSelected.getIdEquipo());
         System.out.println("Equipo local: " + localTeamSelected.getNombre() + "vs Equipo Visita: " + visitTeamSelected.getNombre());
-        
-        
+
         EncuentroDAO encuentroDao = new EncuentroDAO();
-        
+
         encuentroDao.agregarEncuentro(
                 dateEventForDB,
                 startTime,
@@ -365,7 +383,7 @@ public class NewEvent extends javax.swing.JFrame {
                 localTeamSelected.getIdEquipo(),
                 visitTeamSelected.getIdEquipo()
         );
-        
+
         this.panelAdmin.setEventsIntoEventListModel();
         this.dispose();
 

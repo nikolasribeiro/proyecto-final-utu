@@ -4,6 +4,7 @@
  */
 package ventanas;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import usuarios.UserDAO;
 import usuarios.User;
@@ -25,6 +26,7 @@ public class ProfileWindow extends javax.swing.JFrame {
     public ProfileWindow() {
         initComponents();
         setFieldsWithUserData();
+        disableNormalWindowBehaviorOnClose();
     }
 
     public ProfileWindow(User userLoggedIn, MainWindow mainWindow) {
@@ -32,6 +34,7 @@ public class ProfileWindow extends javax.swing.JFrame {
         this.userLoggedIn = userLoggedIn;
         this.mainWindow = mainWindow;
         setFieldsWithUserData();
+        disableNormalWindowBehaviorOnClose();
     }
 
     public void setFieldsWithUserData() {
@@ -40,7 +43,22 @@ public class ProfileWindow extends javax.swing.JFrame {
         passwordField.setText(this.userLoggedIn.getPassword());
         nameField.setText(this.userLoggedIn.getName());
     }
-
+    
+    private void disableNormalWindowBehaviorOnClose() {
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                closeWindow();
+            }
+        });
+    }
+    
+    private void closeWindow(){
+        this.dispose();
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
