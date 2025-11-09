@@ -22,6 +22,9 @@ public class NewUser extends javax.swing.JFrame {
     private PanelAdm panelAdminPadre;
     private User userSelected;
     private User userLoggedIn;
+    private DefaultComboBoxModel genderComboBoxModel = new DefaultComboBoxModel<>(Genero.values());
+    private DefaultComboBoxModel stateComboBoxModel = new DefaultComboBoxModel<>(Estado.values());
+    private DefaultComboBoxModel roleComboBoxModel = new DefaultComboBoxModel<>(Rol.values());
 
     public NewUser(User user) {
         initComponents();
@@ -51,8 +54,8 @@ public class NewUser extends javax.swing.JFrame {
 
         loadUserDataIntoForm();
     }
-    
-        private void disableNormalWindowBehaviorOnClose() {
+
+    private void disableNormalWindowBehaviorOnClose() {
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
@@ -61,20 +64,16 @@ public class NewUser extends javax.swing.JFrame {
             }
         });
     }
-    
-    private void closeWindow(){
+
+    private void closeWindow() {
         this.dispose();
     }
 
-    
-    
     private void setComboboxes() {
-        DefaultComboBoxModel genderComboBoxModel = new DefaultComboBoxModel<>(Genero.values());
-        DefaultComboBoxModel stateComboBoxModel = new DefaultComboBoxModel<>(Estado.values());
-        DefaultComboBoxModel roleComboBoxModel = new DefaultComboBoxModel<>(Rol.values());
         genderTxt.setModel(genderComboBoxModel);
         stateTxt.setModel(stateComboBoxModel);
         roleTxt.setModel(roleComboBoxModel);
+        roleComboBoxModel.setSelectedItem(Rol.user);
     }
 
     private void loadUserDataIntoForm() {
@@ -85,6 +84,10 @@ public class NewUser extends javax.swing.JFrame {
         passwordTxt.setVisible(false);
         nameTxt.setText(userSelected.getName());
         emailTxt.setText(userSelected.getEmail());
+        passwordTxt.setText(userSelected.getPassword());
+        genderComboBoxModel.setSelectedItem(userSelected.getGender());
+        stateComboBoxModel.setSelectedItem(userSelected.getState());
+        roleComboBoxModel.setSelectedItem(userSelected.getRole());
         btnAction.setText("Guardar Cambios");
     }
 
@@ -246,27 +249,6 @@ public class NewUser extends javax.swing.JFrame {
         String name = nameTxt.getText();
         String email = emailTxt.getText();
 
-        boolean fieldsAreInvalid
-                = login.isBlank()
-                || login.isEmpty()
-                || password.isBlank() 
-                || password.isEmpty()
-                || name.isBlank()
-                || name.isEmpty()
-                || email.isBlank()
-                || email.isEmpty();
-        
-        if(fieldsAreInvalid){
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Todos los campos son obligatorios.",
-                    "Campos obligatorios",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        
-        
         UserDAO userDao = new UserDAO();
 
         if (this.userLoggedIn != null) {
@@ -288,7 +270,7 @@ public class NewUser extends javax.swing.JFrame {
                 panelAdminPadre.setUsersIntoUsersListModel();
             }
 
-            JOptionPane.showMessageDialog(rootPane, "Usuario " + name + " creado exitosamente.", "Exito", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(panelAdminPadre, "Usuario " + name + " creado exitosamente.", "Exito", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
             return;
         }
@@ -308,15 +290,33 @@ public class NewUser extends javax.swing.JFrame {
         newUser.setState(state);
 
         if (userSelected != null) {
-
             userDao.update(newUser);
 
             if (panelAdminPadre != null) {
                 panelAdminPadre.setUsersIntoUsersListModel();
             }
 
-            JOptionPane.showMessageDialog(rootPane, "Usuario " + name + " actualizado exitosamente.", "Exito", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(panelAdminPadre, "Usuario " + name + " actualizado exitosamente.", "Exito", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
+            return;
+        }
+
+        boolean fieldsAreInvalid
+                = login.isBlank()
+                || login.isEmpty()
+                || password.isBlank()
+                || password.isEmpty()
+                || name.isBlank()
+                || name.isEmpty()
+                || email.isBlank()
+                || email.isEmpty();
+
+        if (fieldsAreInvalid) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Todos los campos son obligatorios.",
+                    "Campos obligatorios",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -326,14 +326,13 @@ public class NewUser extends javax.swing.JFrame {
             panelAdminPadre.setUsersIntoUsersListModel();
         }
 
-        JOptionPane.showMessageDialog(rootPane, "Usuario " + name + " creado exitosamente.", "Exito", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Usuario " + name + " creado exitosamente.", "Exito", JOptionPane.INFORMATION_MESSAGE);
         this.dispose();
     }//GEN-LAST:event_btnActionActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
         this.dispose();
     }//GEN-LAST:event_backBtnActionPerformed
-
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
