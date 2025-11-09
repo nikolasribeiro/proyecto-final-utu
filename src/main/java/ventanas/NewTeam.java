@@ -49,8 +49,8 @@ public class NewTeam extends javax.swing.JFrame {
     
     private void setEdittedValues () {
         teamNameTxt.setText(this.teamSelected.getNombre());
-        title.setText("Editar equipo: " + this.teamSelected.getNombre());
-        teamBtnAction.setText("Guardar cambios");
+        title.setText("Editar: " + this.teamSelected.getNombre());
+        teamBtnAction.setText("Guardar");
     }
     
     
