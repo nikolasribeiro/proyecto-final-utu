@@ -63,7 +63,7 @@ public class UserDAO {
     
     public List<User> getAll() {
         List<User> users = new ArrayList<>();
-        String sql = "SELECT login,nombre,genero,correo,estado,rol,puntos FROM usuario";
+        String sql = "SELECT login,contraseña,nombre,genero,correo,estado,rol,puntos FROM usuario;";
 
         // Usamos try-with-resources para asegurar el cierre automático
         try (Connection conn = DBConnector.getConnection();
@@ -74,6 +74,7 @@ public class UserDAO {
                 User user = new User();
                 user.setLogin(rs.getString("login"));
                 user.setName(rs.getString("nombre"));
+                user.setPassword(rs.getString("contraseña"));
                 user.setGender( Genero.desdeBD( rs.getString("genero") ) );
                 user.setEmail(rs.getString("correo"));
                 user.setState(Estado.desdeBD(rs.getString("estado")));
