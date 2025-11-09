@@ -40,7 +40,7 @@ public class PronosticoDetalladoDAO {
 
     public List<PronosticaDetallado> listarTotalDePronosticosConDatosAdicionales() {
         List<PronosticaDetallado> pronosticosDetallados = new ArrayList<>();
-        String sql = BASE_SQL_JOIN + ";";
+        String sql = BASE_SQL_JOIN + " ORDER BY idEncuentro DESC;";
 
         try {
             Connection conn = DBConnector.getConnection();
@@ -73,7 +73,7 @@ public class PronosticoDetalladoDAO {
     
     public List<PronosticaDetallado> listarTotalDePronosticosConDatosAdicionalesPorUsuario(User user) {
         List<PronosticaDetallado> pronosticosDetallados = new ArrayList<>();
-        String sql = BASE_SQL_JOIN + " WHERE p.login = ?;";
+        String sql = BASE_SQL_JOIN + " WHERE p.login = ? ORDER BY idEncuentro DESC;";
 
         try {
             Connection conn = DBConnector.getConnection();

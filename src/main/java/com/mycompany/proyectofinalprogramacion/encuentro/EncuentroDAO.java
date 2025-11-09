@@ -22,7 +22,7 @@ public class EncuentroDAO {
     //Listar encuentros
     public List<Encuentro> listar() {
         List<Encuentro> encuentros = new ArrayList<>();
-        String sql = "SELECT e.idEncuentro, e.fecha, e.horaInicio, el.nombre AS NombreLocal, ev.nombre AS NombreVisita, e.resultadoLocal, e.resultadoVisita, e.estado, e.horaFin FROM encuentro AS e JOIN equipo AS el ON e.idLocal = el.idEquipo JOIN equipo AS ev ON e.idVisita = ev.idEquipo;";
+        String sql = "SELECT e.idEncuentro, e.fecha, e.horaInicio, el.nombre AS NombreLocal, ev.nombre AS NombreVisita, e.resultadoLocal, e.resultadoVisita, e.estado, e.horaFin FROM encuentro AS e JOIN equipo AS el ON e.idLocal = el.idEquipo JOIN equipo AS ev ON e.idVisita = ev.idEquipo ORDER BY e.idEncuentro DESC;";
         
         try 
             (Connection conn = DBConnector.getConnection();

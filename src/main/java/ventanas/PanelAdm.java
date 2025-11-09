@@ -73,7 +73,11 @@ public class PanelAdm extends javax.swing.JFrame {
         eventList.setModel(eventListModel);
 
         for (int i = 0; i < encuentros.size(); i++) {
-            String element = (i + 1) + ") " + "Local: " + encuentros.get(i).getNombreLocal() + " - Visitante: " + encuentros.get(i).getNombreVisita() + " - Estado del encuentro: " + encuentros.get(i).getEstado();
+            String element = "";
+            if(i == 0 && encuentros.get(i).getEstado().equals("habilitado")){
+                element += "(=== Nuevo Encuentro ===) ";
+            }
+            element += "Local: " + encuentros.get(i).getNombreLocal() + " - Visitante: " + encuentros.get(i).getNombreVisita() + " - Estado del encuentro: " + encuentros.get(i).getEstado();
             eventListModel.addElement(element);
         }
     }
